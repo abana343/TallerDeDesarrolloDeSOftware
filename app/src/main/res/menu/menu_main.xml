@@ -1,0 +1,43 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity" >
+
+    <!-- conector -->
+
+    <item
+        android:id="@+id/action_bar"
+        android:title="@string/action_conectar"
+        android:icon="@drawable/abc_ic_menu_share_mtrl_alpha"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom" />
+
+    <!-- items de la opcion -->
+
+    <item
+        android:id="@+id/action_ayuda"
+        android:title="@string/action_ayuda"
+        android:orderInCategory="2"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_galeria"
+        android:title="@string/action_galeria"
+        android:orderInCategory="3"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_rutas"
+        android:title="@string/action_rutas"
+        android:orderInCategory="4"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="5"
+        app:showAsAction="never"/>
+
+
+</menu>

@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Segurito</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">configuración</string>
+    <string name="action_conectar">conectar</string>
+    <string name="action_ayuda">Ayuda</string>
+    <string name="action_galeria">galeria</string>
+    <string name="action_rutas">rutas</string>
+    <string name="title_activity_main_activity2">MainActivity2Activity</string>
+    <string name="viewFlipper">flipper</string>
+
+</resources>
