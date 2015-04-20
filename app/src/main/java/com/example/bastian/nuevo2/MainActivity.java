@@ -1,17 +1,26 @@
 package com.example.bastian.nuevo2;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ViewFlipper;
 
+public class MainActivity extends Activity {
 
-public class MainActivity extends ActionBarActivity {
+    public float init_x;
+    ViewFlipper vf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        vf = (ViewFlipper) findViewById(R.id.ViewFlipper);
+
+        vf.setOnTouchListener(new ListenerTouchViewFlipper());
     }
 
 
@@ -33,7 +42,39 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private class ListenerTouchViewFlipper implements View.OnTouchListener
+    {
+
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event)
+        {
+            switch (event.getAction())
+            {
+                case MotionEvent.ACTION_DOWN: //Cuando el usuario toca la pantalla por primera vez
+                    init_x=event.getX();
+                    return true;
+                case MotionEvent.ACTION_UP: //Cuando el usuario deja de presionar
+                    float distance =init_x-event.getX();
+
+                    if(distance>0)
+                    {
+                        vf.showPrevious();
+                    }
+
+                    if(distance<0)
+                    {
+                        vf.showNext();
+                    }
+
+                default:
+                    break;
+            }
+            return false;
+
+        }
     }
 }
