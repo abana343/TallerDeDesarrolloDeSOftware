@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical" android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:id="@+id/a"
+android:weightSum="1">
+
+<TextView
+    android:layout_width="114dp"
+    android:layout_height="43dp"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:text="Rutas"
+    android:id="@+id/textView"
+    android:layout_gravity="center_horizontal" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="301dp"
+        android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal" />
+
+</LinearLayout>

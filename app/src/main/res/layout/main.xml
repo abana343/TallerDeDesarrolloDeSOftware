@@ -38,7 +38,8 @@
         android:layout_marginTop="50dp"
         android:id="@+id/imageButton"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/galeria" />
+        android:src="@drawable/galeria"
+        android:onClick="onClickButtonIrRuta" />
 
     <ImageButton
         android:layout_width="wrap_content"

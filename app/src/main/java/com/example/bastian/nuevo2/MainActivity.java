@@ -1,6 +1,7 @@
 package com.example.bastian.nuevo2;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -76,5 +77,11 @@ public class MainActivity extends Activity {
             return false;
 
         }
+    }
+
+    public void onClickButtonIrRuta(View view){
+        Intent i = new Intent(this, RutaActivity.class);
+        startActivity(i);
+
     }
 }
