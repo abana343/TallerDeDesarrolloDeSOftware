@@ -25,7 +25,7 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
     float downx = 0, downy = 0, upx = 0, upy = 0;
 
 
-
+//comentariooooo
 
     int tiempo = 0;
 
