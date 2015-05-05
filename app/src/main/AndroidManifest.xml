@@ -16,12 +16,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".RutaActivity"
             android:label="@string/title_activity_ruta" >
         </activity>
+        <activity
+            android:name=".movimiento"
+            android:label="@string/title_activity_movimiento" >
+        </activity>
     </application>
+
+    <uses-permission android:name = "android.permission.INTERNET"></uses-permission>
 
 </manifest>

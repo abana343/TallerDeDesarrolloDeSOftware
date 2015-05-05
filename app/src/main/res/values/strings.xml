@@ -9,5 +9,6 @@
     <string name="action_galeria">galeria</string>
     <string name="action_rutas">rutas</string>
     <string name="title_activity_ruta">RutaActivity</string>
+    <string name="title_activity_movimiento">movimiento</string>
 
 </resources>

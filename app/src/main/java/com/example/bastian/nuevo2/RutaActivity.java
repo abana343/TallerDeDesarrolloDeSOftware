@@ -169,8 +169,8 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
 
         Point tam= new Point();
         display.getSize(tam);
-        int widthPantalla = 1080;
-        int heightPantalla = 903;
+        int widthPantalla = tam.x;
+        int heightPantalla = tam.y/2;
 
         //System.out.println(tam.x + " | " + tam.y);
 
