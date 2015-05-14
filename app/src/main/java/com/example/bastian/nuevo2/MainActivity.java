@@ -65,6 +65,8 @@ public class MainActivity extends Activity {
     {
         EditText editTextServer = (EditText) findViewById(R.id.IpWebservice);
         server = editTextServer.getText().toString();//192.168.56.1
+        TextView tv = (TextView) findViewById(R.id.RB);
+        tv.setText(server);
         final String URL = "http://" + server+":8080/RBTNWS/RobotinoServices";//no sirve localhost si no se usa el emulador propio de androidstudio
         final String METHOD_NAME = "conectar";
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
@@ -178,8 +180,8 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void onClickButtonIrRuta(View view){
-        Intent i = new Intent(this, RutaActivity.class);
+    public void onClickButtonListaRutas(View view){
+        Intent i = new Intent(this, ListarRutaActivity.class);
         startActivity(i);
 
     }

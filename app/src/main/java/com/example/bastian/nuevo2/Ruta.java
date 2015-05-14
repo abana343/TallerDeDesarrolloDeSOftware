@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Created by Javier Aros on 23-04-2015.
+ * Contiene los puntos de una ruta
  */
 public class Ruta {
 
@@ -18,7 +19,7 @@ public class Ruta {
     public ImageView imagenView;
     public Bitmap bitmap;
     public Canvas canvas;
-
+    public String nombre;
 
     int escala;
     int widthPantalla;
@@ -29,6 +30,7 @@ public class Ruta {
     {
         this.puntos = new ArrayList<>();
         this.lista = new ArrayList<String>();
+        this.nombre = "nombre";  ///editar
     }
 
     public void actualizarLista()

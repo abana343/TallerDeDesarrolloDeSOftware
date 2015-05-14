@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Desconectado"
-        />
+        android:layout_gravity="center_horizontal" />
 
     <GridLayout
         android:layout_width="match_parent"
@@ -70,7 +70,7 @@
             android:layout_marginTop="50dp"
             android:background="@drawable/btn_circle"
             android:layout_marginRight="20dp"
-            android:onClick="onClickButtonIrRuta" />
+            android:onClick="onClickButtonListaRutas" />
 
         <ImageButton
             android:layout_width="120dp"

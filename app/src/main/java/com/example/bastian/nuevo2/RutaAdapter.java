@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
 /**
  * Created by Javier Aros on 23-04-2015.
+ * Adapta los punts de una ruta para ser mostrados como una lista
  */
 public class RutaAdapter extends BaseAdapter {
 
@@ -60,7 +60,8 @@ public class RutaAdapter extends BaseAdapter {
         //imagenRuta.setImageBitmap(ruta.bitmap);
         ImageButton botonCerrar = (ImageButton) rowView.findViewById(R.id.buttonEliminar);
         botonCerrar.setTag(position);
-
+        ImageButton botonEditar = (ImageButton) rowView.findViewById(R.id.buttonEditar);
+        botonEditar.setTag(position);
         return rowView;
     }
 }

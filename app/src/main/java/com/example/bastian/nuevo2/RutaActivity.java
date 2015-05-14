@@ -2,6 +2,8 @@ package com.example.bastian.nuevo2;
 
 import android.app.Activity;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -16,10 +18,11 @@ import android.view.MotionEvent;
 import android.view.View;
 
 
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-
+import android.widget.Toast;
 
 
 public class RutaActivity extends Activity implements View.OnTouchListener {
@@ -34,17 +37,28 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
 
     //
     private Ruta ruta;
+    private int editarPunto;
+
+
+
+    //
+    final Context context = this;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ruta);
 
         imageView = (ImageView) this.findViewById(R.id.imageView);
-        ruta = new Ruta();
-        inicializarImageView();
-        mensajeInicio();
-        imageView.setOnTouchListener(this);
+        //Carga ruta
+        ruta = (Ruta)Comunicador.getObjeto();
+        if (ruta == null)
+        {
+            //Si no existe ruta guardada crea una nueva
+            ruta = new Ruta();
+        }
 
+        inicializarImageView();
+        imageView.setOnTouchListener(this);
         this.listView = (ListView) findViewById(R.id.listView);
 
 
@@ -52,67 +66,101 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
 
 
         this.listView.setAdapter(new RutaAdapter(this,ruta.getLista()));
-        this.listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);//revisar-------------------------------------------
 
+
+        editarPunto =  -1;
     }
 
     public boolean onTouch(View v, MotionEvent event) {
         int action = event.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                inicializarImageView();
-                if(ruta.getPuntos().size()==0)
-                {
-                    downx = event.getX();
-                    downy = event.getY();
-                    ruta.agregarPunto(downx,downy);
-                }
-                else
-                {
+
+        if(editarPunto != -1)
+        {
+            Point puntoEditado = ruta.getPuntos().get(editarPunto);
+            inicializarImageView();
+            switch (action){
+                case MotionEvent.ACTION_DOWN:
+                    puntoEditado.x = (int)event.getX();
+                    puntoEditado.y = (int)event.getY();
+                    ruta.getPuntos().set(editarPunto,puntoEditado);
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    puntoEditado.x = (int)event.getX();
+                    puntoEditado.y = (int)event.getY();
+                    ruta.getPuntos().set(editarPunto,puntoEditado);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    puntoEditado.x = (int)event.getX();
+                    puntoEditado.y = (int)event.getY();
+                    ruta.getPuntos().set(editarPunto,puntoEditado);
+                    this.editarPunto = -1;
+                    dibujarRuta();
+                    break;
+            }
+            ruta.actualizarLista();
+            listView.setAdapter(new RutaAdapter(this, ruta.getLista()));
+
+        }
+
+        else
+        {
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    inicializarImageView();
+                    if(ruta.getPuntos().size()==0)
+                    {
+                        downx = event.getX();
+                        downy = event.getY();
+                        ruta.agregarPunto(downx,downy);
+                    }
+                    else
+                    {
+                        upx = event.getX();
+                        upy = event.getY();
+                    }
+
+                    dibujarRuta();
+
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    inicializarImageView();
                     upx = event.getX();
                     upy = event.getY();
-                }
+                    canvas.drawLine(downx, downy, upx, upy, paint);
 
-                dibujarRuta();
-
-                break;
-            case MotionEvent.ACTION_MOVE:
-                inicializarImageView();
-                upx = event.getX();
-                upy = event.getY();
-                canvas.drawLine(downx, downy, upx, upy, paint);
-
-                dibujarRuta();
+                    dibujarRuta();
 
 
-                break;
-            case MotionEvent.ACTION_UP:
-                canvas.drawLine(downx, downy, upx, upy, paint);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    canvas.drawLine(downx, downy, upx, upy, paint);
 
 
-                upx = event.getX();
-                upy = event.getY();
-                if(ruta.getPuntos().size()==0)
-                {
-                    ruta.agregarPunto(downx,downy);
-                }
+                    upx = event.getX();
+                    upy = event.getY();
+                    if(ruta.getPuntos().size()==0)
+                    {
+                        ruta.agregarPunto(downx,downy);
+                    }
 
-                ruta.imagenView = imageView;
-                ruta.imagenView.setDrawingCacheEnabled(true);
-                ruta.bitmap = Bitmap.createBitmap(v.getDrawingCache());
-                v.destroyDrawingCache();
-                ruta.canvas =canvas;
-                ruta.agregarPunto(upx,upy);
-                listView.setAdapter(new RutaAdapter(this, ruta.getLista()));
+                    ruta.imagenView = imageView;
+                    ruta.imagenView.setDrawingCacheEnabled(true);
+                    ruta.bitmap = Bitmap.createBitmap(v.getDrawingCache());
+                    v.destroyDrawingCache();
+                    ruta.canvas =canvas;
+                    ruta.agregarPunto(upx,upy);
+                    listView.setAdapter(new RutaAdapter(this, ruta.getLista()));
 
-                downx = upx;
-                downy = upy;
-                dibujarRuta();
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                break;
-            default:
-                break;
+                    downx = upx;
+                    downy = upy;
+                    dibujarRuta();
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                    break;
+                default:
+                    break;
+            }
+
         }
         return true;
     }
@@ -120,39 +168,38 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
 
     private void dibujarRuta()
     {
-        if(ruta.getPuntos().size() == 1)
-        {
-            dibujarPunto(ruta.getPuntos().get(0),1);
-        }
-
         for(int i = 0; i < ruta.getPuntos().size()-1;i++){
             Point p1 , p2;
             p1 = ruta.getPuntos().get(i);
             p2 = ruta.getPuntos().get(i+1);
             canvas.drawLine(p1.x,p1.y,p2.x,p2.y,paint);
 
+            if( i == editarPunto)
+                dibujarPunto(p1,i+1,true);
+            else
+                dibujarPunto(p1,i+1,false);
 
-            dibujarPunto(p1,i+1);
             if (i == ruta.getPuntos().size()-2)
             {
-                dibujarPunto(p2,i+2);
+                dibujarPunto(p2,i+2,false);
             }
         }
 
     }
 
-    private void dibujarPunto(Point point, int numero )
+    private void dibujarPunto(Point point, int numero , boolean puntoEditado)
     {
         int radio = 30;
         Paint p = new Paint();
         int textoSize = 40;
-
-
         p.setColor(Color.BLACK);
         p.setStyle(Paint.Style.STROKE);
         canvas.drawCircle(point.x, point.y, radio, p);
         p.setStyle(Paint.Style.FILL);
-        p.setColor(Color.WHITE);
+        if (puntoEditado)
+            p.setColor(Color.YELLOW);
+        else
+            p.setColor(Color.WHITE);
         canvas.drawCircle(point.x, point.y, radio - 2, p);
         p.setColor(Color.BLACK);
         p.setTextSize(textoSize);
@@ -161,10 +208,6 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
 
 
     private void inicializarImageView(){
-
-
-
-        //System.out.println(imageView.getWidth() + " | " + imageView.getHeight());
         Display display = getWindowManager().getDefaultDisplay();
 
         Point tam= new Point();
@@ -172,7 +215,6 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
         int widthPantalla = tam.x;
         int heightPantalla = tam.y/2;
 
-        //System.out.println(tam.x + " | " + tam.y);
 
 
         bitmap = Bitmap.createBitmap(widthPantalla,heightPantalla,Bitmap.Config.ARGB_8888);
@@ -206,21 +248,10 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
 
         EditText escalaText = (EditText)findViewById(R.id.escala);
         int escala = Integer.parseInt(escalaText.getText().toString());
-        ruta.setDatosPantalla(escala,widthPantalla,widthPantalla);///////////////ARREGLAR////////////////////////////////////
-    }
-
-    private void mensajeInicio(){
-
-        paint.setTextSize(100);
-        canvas.drawText("Inicia tu ruta",250,250,paint);
-        paint.setStrokeWidth(10);
+        ruta.setDatosPantalla(escala,widthPantalla,heightPantalla);///////////////revisar////////////////////////////////////
     }
 
 
-    public void onClickotro(View view){
-
-        System.out.println("-------------------");
-    }
 
     public void onClickButtonEliminar(View view){
         int posicion = (Integer)view.getTag();
@@ -230,11 +261,72 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
             ruta.eliminarPunto(0);
         }
         listView.setAdapter(new RutaAdapter(this, ruta.getLista()));
+
+        this.editarPunto = -1;
+        if (posicion+1 == ruta.getPuntos().size()) {
+            downx = ruta.getPuntos().get(posicion).x;
+            downy = ruta.getPuntos().get(posicion).y;
+        }
         inicializarImageView();
+    }
+
+    public  void onClickButtonEditar(View view){
+        this.editarPunto = (Integer)view.getTag();
+        dibujarRuta();
 
     }
 
+    public void onClickButtonGuardarRuta(View view){
 
+        // custom dialog
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.dialog_ruta);
+        dialog.setTitle("Nombre de la ruta");
+
+        // set the custom dialog components - text, image and button
+        final EditText text = (EditText) dialog.findViewById(R.id.editTextNombreRuta);
+
+
+
+        Button dialogButtonCancelar = (Button) dialog.findViewById(R.id.dialogButtonCancelar);
+        // if button is clicked, close the custom dialog
+        dialogButtonCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        Button dialogButtonGuardarRuta = (Button) dialog.findViewById(R.id.dialogButtonGuardar);
+        dialogButtonGuardarRuta.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(text.getText().toString().length() == 0)
+                {
+                    Toast.makeText(context, "Ingresa nombre de ruta", Toast.LENGTH_SHORT).show();
+                }
+                else{
+
+
+                    String listaPuntos = ""+ text.getText();
+                    for(int i = 0; i <ruta.getPuntos().size();i++)
+                    {
+                        listaPuntos += "("+ ruta.getPuntos().get(i).x + "," +ruta.getPuntos().get(i).y +")-";
+                    }
+                    EditText escalaText = (EditText)findViewById(R.id.escala);
+                    int escala = Integer.parseInt(escalaText.getText().toString());
+                    listaPuntos+= Integer.toString(escala);
+
+                    System.out.println(listaPuntos);
+                    Toast.makeText(context, "Guardado", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+            }
+
+        });
+        dialog.show();
+
+    }
 
 
 }
