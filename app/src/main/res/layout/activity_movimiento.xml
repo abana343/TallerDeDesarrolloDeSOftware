@@ -11,8 +11,26 @@
 
     <com.example.bastian.nuevo2.MySurfaceView
         android:id="@+id/analogo"
-        android:layout_width="fill_parent"
+        android:layout_width="130dp"
         android:layout_height="150dp"
-        android:layout_gravity="left|bottom" />
+        android:layout_gravity="center_horizontal|bottom" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton5"
+        android:layout_gravity="left|bottom"
+        android:src="@drawable/botonpress"
+        android:layout_marginBottom="20dp"
+        android:onClick="gizquierda" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton6"
+        android:layout_gravity="right|bottom"
+        android:src="@drawable/botonlibre"
+        android:layout_marginBottom="20dp"
+        android:onClick="gderecha" />
 
 </FrameLayout>

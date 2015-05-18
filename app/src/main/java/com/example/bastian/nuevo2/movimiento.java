@@ -1,17 +1,11 @@
 package com.example.bastian.nuevo2;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.EditText;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -27,7 +21,8 @@ public class movimiento extends Activity {
 
 
     private static final String NAMESPACE = "http://services.ws.robotino/";
-    private static final String URL = "http://192.168.1.129:8080/RBTNWS/RobotinoServices";//no sirve localhost si no se usa el emulador propio de androidstudio
+    private static String URL = "http://192.168.1.129:8080/RBTNWS/RobotinoServices";//no sirve localhost si no se usa el emulador propio de androidstudio
+    private static String server="172.26.201.1";
 
     private MySurfaceView analog;
 
@@ -42,7 +37,20 @@ public class movimiento extends Activity {
         //se define que en ves de usar una vista de Layout se usa la vista entregada por MySurfaceView
         setContentView(R.layout.activity_movimiento);
 
-        analog = (MySurfaceView) findViewById(R.id.analogo);
+        try {
+            analog = (MySurfaceView) findViewById(R.id.analogo);
+            analog.setMovimiento(this);
+
+        }
+        catch (Exception e){}
+
+        try {
+            EditText editTextServer = (EditText) findViewById(R.id.IpWebservice);
+            server = editTextServer.getText().toString();//192.168.56.1
+            URL= "http://"+server+":8080/RBTNWS/RobotinoServices";
+        }catch (Exception e){}
+
+        Log.e("server=",""+server);
     }
 
     /*
@@ -96,7 +104,367 @@ public class movimiento extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                      //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        nt.start();
+    }
+
+    public void adelante(View view)
+    {
+        final String METHOD_NAME = "adelante";
+        final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+        Thread nt = new Thread()
+        {
+            String respuesta = "Coneccion Fallida";
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuesta = resultado.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        nt.start();
+    }
+
+    public void atras(View view)
+    {
+        final String METHOD_NAME = "atras";
+        final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+        Thread nt = new Thread()
+        {
+            String respuesta = "Coneccion Fallida";
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuesta = resultado.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        nt.start();
+    }
+
+    public void derecha(View view)
+    {
+        final String METHOD_NAME = "derecha";
+        final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+        Thread nt = new Thread()
+        {
+            String respuesta = "Coneccion Fallida";
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuesta = resultado.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        nt.start();
+    }
+
+    public void izquierda(View view)
+    {
+        final String METHOD_NAME = "izquierda";
+        final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+        Thread nt = new Thread()
+        {
+            String respuesta = "Coneccion Fallida";
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuesta = resultado.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        nt.start();
+    }
+
+    public void dNE(View view)
+    {
+        final String METHOD_NAME = "dNE";
+        final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+        Thread nt = new Thread()
+        {
+            String respuesta = "Coneccion Fallida";
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuesta = resultado.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        nt.start();
+    }
+
+    public void dSO(View view)
+    {
+        final String METHOD_NAME = "dSO";
+        final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+        Thread nt = new Thread()
+        {
+            String respuesta = "Coneccion Fallida";
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuesta = resultado.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        nt.start();
+    }
+
+    public void dSE(View view)
+    {
+        final String METHOD_NAME = "dSE";
+        final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+        Thread nt = new Thread()
+        {
+            String respuesta = "Coneccion Fallida";
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuesta = resultado.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        nt.start();
+    }
+
+    public void dNO(View view)
+    {
+        final String METHOD_NAME = "dNO";
+        final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+        Thread nt = new Thread()
+        {
+            String respuesta = "Coneccion Fallida";
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuesta = resultado.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        nt.start();
+    }
+
+    public void gizquierda(View view)
+    {
+        final String METHOD_NAME = "gizquierda";
+        final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+        Thread nt = new Thread()
+        {
+            String respuesta = "Coneccion Fallida";
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuesta = resultado.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        nt.start();
+    }
+
+    public void gderecha(View view)
+    {
+        final String METHOD_NAME = "gderecha";
+        final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+        Thread nt = new Thread()
+        {
+            String respuesta = "Coneccion Fallida";
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuesta = resultado.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
                     }
                 });
             }

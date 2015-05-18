@@ -37,6 +37,9 @@ public class MainActivity extends Activity {
         vf = (ViewFlipper) findViewById(R.id.ViewFlipper);
 
         vf.setOnTouchListener(new ListenerTouchViewFlipper());
+
+        EditText editTextServer = (EditText) findViewById(R.id.IpWebservice);
+        editTextServer.setText(R.string.ipwebservice);
     }
 
 
@@ -107,44 +110,6 @@ public class MainActivity extends Activity {
 
         nt.start();
     }
-
-    public void adelante(View view)
-    {
-        final String URL = "http://" + server+":8080/RBTNWS/RobotinoServices";//no sirve localhost si no se usa el emulador propio de androidstudio
-        final String METHOD_NAME = "adelante";
-        final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
-        Thread nt = new Thread()
-        {
-            String respuesta;
-            @Override
-            public void run()
-            {
-                SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
-                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-                envelope.setOutputSoapObject(request);
-                HttpTransportSE transportSE = new HttpTransportSE(URL);
-                try {
-                    transportSE.call(SOAP_ACTION,envelope);
-                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
-                    respuesta = resultado.toString();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (XmlPullParserException e) {
-                    e.printStackTrace();
-                }
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MainActivity.this,respuesta,Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        };
-
-        nt.start();
-    }
-
 
     //clase de view flipper
     private class ListenerTouchViewFlipper implements View.OnTouchListener
