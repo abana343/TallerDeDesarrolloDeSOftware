@@ -51,14 +51,10 @@ public class ListaRutaAdapter extends BaseAdapter {
         // Set data into the view.
 
         TextView textViewIDRuta = (TextView) rowView.findViewById(R.id.textViewIDRuta);
-        textViewIDRuta.setText(Integer.toString(position+1));
+        textViewIDRuta.setText( ""+rutas.get(position).getID());
 
         TextView nombre = (TextView) rowView.findViewById((R.id.textViewNombreRuta));
         nombre.setText(rutas.get(position).nombre);
-
-        TextView puntos = (TextView) rowView.findViewById((R.id.textViewNombreRuta));
-        puntos.setText("("+rutas.get(position).getPuntos().size() + ")");
-
 
         Button buttonCargarRuta = (Button) rowView.findViewById(R.id.buttonCargarRuta);
         buttonCargarRuta.setTag(position);

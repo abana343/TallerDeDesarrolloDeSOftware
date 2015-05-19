@@ -24,6 +24,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+
 
 public class RutaActivity extends Activity implements View.OnTouchListener {
     ImageView imageView;
@@ -43,6 +52,10 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
 
     //
     final Context context = this;
+    //
+    private String respuestaServidor = "";
+    private Boolean esperandoThread = true;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +68,14 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
         {
             //Si no existe ruta guardada crea una nueva
             ruta = new Ruta();
+        }
+        else{
+            //inicialisa los campos de rutaActivity
+            Point ultimoPunto = ruta.getPuntos().get(ruta.getPuntos().size()-1);
+            downx = ultimoPunto.x;
+            downy = ultimoPunto.y;
+            upx = ultimoPunto.x;
+            upy = ultimoPunto.y;
         }
 
         inicializarImageView();
@@ -217,6 +238,9 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
 
 
 
+
+
+
         bitmap = Bitmap.createBitmap(widthPantalla,heightPantalla,Bitmap.Config.ARGB_8888);
 
         canvas = new Canvas(bitmap);
@@ -278,55 +302,112 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
 
     public void onClickButtonGuardarRuta(View view){
 
-        // custom dialog
-        final Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.dialog_ruta);
-        dialog.setTitle("Nombre de la ruta");
+        if(ruta.getPuntos().size()==0){
+            Toast.makeText(context, "Agrega puntos  a ruta", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            // custom dialog
+            final Dialog dialog = new Dialog(context);
+            dialog.setContentView(R.layout.dialog_ruta);
+            dialog.setTitle("Nombre de la ruta");
 
-        // set the custom dialog components - text, image and button
-        final EditText text = (EditText) dialog.findViewById(R.id.editTextNombreRuta);
-
-
-
-        Button dialogButtonCancelar = (Button) dialog.findViewById(R.id.dialogButtonCancelar);
-        // if button is clicked, close the custom dialog
-        dialogButtonCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        Button dialogButtonGuardarRuta = (Button) dialog.findViewById(R.id.dialogButtonGuardar);
-        dialogButtonGuardarRuta.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                if(text.getText().toString().length() == 0)
-                {
-                    Toast.makeText(context, "Ingresa nombre de ruta", Toast.LENGTH_SHORT).show();
-                }
-                else{
+            // set the custom dialog components - text, image and button
+            final EditText text = (EditText) dialog.findViewById(R.id.editTextNombreRuta);
 
 
-                    String listaPuntos = ""+ text.getText();
-                    for(int i = 0; i <ruta.getPuntos().size();i++)
-                    {
-                        listaPuntos += "("+ ruta.getPuntos().get(i).x + "," +ruta.getPuntos().get(i).y +")-";
-                    }
-                    EditText escalaText = (EditText)findViewById(R.id.escala);
-                    int escala = Integer.parseInt(escalaText.getText().toString());
-                    listaPuntos+= Integer.toString(escala);
-
-                    System.out.println(listaPuntos);
-                    Toast.makeText(context, "Guardado", Toast.LENGTH_SHORT).show();
+            Button dialogButtonCancelar = (Button) dialog.findViewById(R.id.dialogButtonCancelar);
+            // if button is clicked, close the custom dialog
+            dialogButtonCancelar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     dialog.dismiss();
                 }
-            }
+            });
 
-        });
-        dialog.show();
+            Button dialogButtonGuardarRuta = (Button) dialog.findViewById(R.id.dialogButtonGuardar);
+            dialogButtonGuardarRuta.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (text.getText().toString().length() == 0) {
+                        Toast.makeText(context, "Ingresa nombre de ruta", Toast.LENGTH_SHORT).show();
+                    } else {
+
+
+                        String listaPuntos = "" + text.getText() + "-";
+                        for (int i = 0; i < ruta.getPuntos().size(); i++) {
+                            listaPuntos += "(" + ruta.getPuntos().get(i).x + "," + ruta.getPuntos().get(i).y + ")-";
+                        }
+                        EditText escalaText = (EditText) findViewById(R.id.escala);
+                        int escala = Integer.parseInt(escalaText.getText().toString());
+                        listaPuntos += Integer.toString(escala);
+
+                        //System.out.println(listaPuntos);
+                        //Toast.makeText(context, "Guardado", Toast.LENGTH_SHORT).show();
+                        //dialog.dismiss();
+                        GuardarRuta(listaPuntos);
+                        while(esperandoThread)
+                        {
+                        }
+                        Toast.makeText(context, respuestaServidor, Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+
+
+                    }
+                }
+
+            });
+            dialog.show();
+        }
 
     }
+
+
+
+
+    public void GuardarRuta(final String nombre)
+    {
+        String server = Comunicador.getIpWebService();
+
+        final String URL = "http://" + server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
+        final String METHOD_NAME = "crearRuta";
+        final String SOAP_ACTION = Comunicador.NAMESPACE + METHOD_NAME;
+
+
+
+        Thread nt = new Thread()
+        {
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(Comunicador.NAMESPACE,METHOD_NAME);
+
+                request.addProperty("formatoRuta",nombre);
+                //request.addProperty("hostnameIP","172.26.201.3");//el primer argumento es el string que identifica el web param
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuestaServidor = "Ruta Guardada";
+                    esperandoThread = false;
+                } catch (IOException e) {
+                    respuestaServidor = "Error conexion";
+                    esperandoThread = false;
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    respuestaServidor = "Error conexion";
+                    esperandoThread = false;
+                    e.printStackTrace();
+                }
+            }
+
+        };
+
+        nt.start();
+    }
+
+
 
 
 }

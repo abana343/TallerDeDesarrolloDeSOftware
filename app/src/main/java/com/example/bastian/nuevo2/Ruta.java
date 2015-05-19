@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class Ruta {
 
+    private int ID;
     private ArrayList<Point> puntos;
     private List lista;
     public ImageView imagenView;
@@ -33,6 +34,17 @@ public class Ruta {
         this.nombre = "nombre";  ///editar
     }
 
+
+
+    public Ruta(int ID, int escala, String nombre)
+    {
+        this.ID = ID;
+        this.escala = escala;
+        this.nombre = nombre;
+        this.puntos = new ArrayList<>();
+        this.lista = new ArrayList<String>();
+    }
+
     public void actualizarLista()
     {
         this.lista = new ArrayList<String>();
@@ -43,8 +55,8 @@ public class Ruta {
 
     private String distancia(Point p1, Point p2)
     {
-        Double x = new Double(escala * (p1.x - p2.x) / widthPantalla);
-        Double y = new Double(escala * (p1.y - p2.y) / heightPantalla);
+        Double x = (((double)p1.x - p2.x)/150)*escala;
+        Double y = (((double)p1.y - p2.y)/150)*escala;
         Double distancia = new Double(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
         return "Distancia: " + String.format("%.2f", distancia);
 
@@ -82,4 +94,10 @@ public class Ruta {
         actualizarLista();
 
     }
+
+    public int getID() {
+        return ID;
+    }
+
+
 }
