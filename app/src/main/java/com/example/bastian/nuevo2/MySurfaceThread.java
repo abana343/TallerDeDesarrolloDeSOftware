@@ -2,6 +2,7 @@ package com.example.bastian.nuevo2;
 
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
 /**
  * Created by Bastian on 28-04-2015.
@@ -9,11 +10,11 @@ import android.view.SurfaceHolder;
 public class MySurfaceThread extends Thread
 {
     private SurfaceHolder sh;
-    private MySurfaceView view;
+    private SurfaceView view;
     private boolean run;
 
     //el constructor recive los dos tipos de surface
-    public MySurfaceThread(SurfaceHolder sh, MySurfaceView view)
+    public MySurfaceThread(SurfaceHolder sh, SurfaceView view)
     {
         this.sh=sh;
         this.view=view;

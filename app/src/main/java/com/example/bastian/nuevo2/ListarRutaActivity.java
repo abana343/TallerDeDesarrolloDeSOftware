@@ -1,13 +1,16 @@
 package com.example.bastian.nuevo2;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -29,7 +32,8 @@ public class ListarRutaActivity extends Activity {
     private String respuestaWS;
 
     private Boolean esperandoThread = true;
-    private Time tiempoEsperaWebService;
+
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +51,15 @@ public class ListarRutaActivity extends Activity {
 
 
         this.listViewRutas.setAdapter(new ListaRutaAdapter(this,list));
-
+        this.listViewRutas.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+/*                        DESCOMENTAR <----------------------------------------
         obtenerRutas();
         while(esperandoThread) {
 
 
         }
+
+        */
         esperandoThread=true;
         if(!respuestaWS.equals("error"))
         {
@@ -60,9 +67,47 @@ public class ListarRutaActivity extends Activity {
 
             this.listViewRutas.setAdapter(new ListaRutaAdapter(this,list));
         }
-
-
+        context = getApplicationContext();
+        cargado();
     }
+
+
+
+    public void cargado(){
+        Toast.makeText(this, "Cargando rutas", Toast.LENGTH_SHORT).show();
+
+        String msg = "Error cargar las rutas\n revisa tu conexion al servidor";
+        //Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+        Thread nt = new Thread()
+        {
+            @Override
+            public void run()
+            {
+                obtenerRutas();
+                while(esperandoThread) {}
+                esperandoThread=true;
+                if(!respuestaWS.equals("error"))
+                {
+                    list = crearRutas();
+
+                    listViewRutas.setAdapter(new ListaRutaAdapter(context,list));
+                }
+                else {
+                    context = getApplicationContext();
+                    String msg = "Error cargar las rutas\n revisa tu conexion al servidor";
+                    //Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
+        nt.start();
+    }
+
+
+
+
+
+
 
 
 
@@ -72,14 +117,13 @@ public class ListarRutaActivity extends Activity {
 
         for(int i = 1 ; i <8;i++)
         {
-            Ruta ruta = new Ruta(00, 50, "test");
+            Ruta ruta = new Ruta(00, 50, "test " + i);
 
-            ruta.setDatosPantalla(i*50,800,800);
+            ruta.setDatosPantalla(i*5,800,800);
 
-            for(int j = 3 ; j <7 ; j++)
+            for(int j = 10 ; j <17 ; j++)
             {
-                ruta.agregarPunto(i*i*i,j*j*j);
-                ruta.agregarPunto(i*i*j,j*j*i);
+                ruta.agregarPunto(i*j+30,j*j*i +99);
             }
             list.add(ruta);
         }
@@ -112,38 +156,13 @@ public class ListarRutaActivity extends Activity {
 
     public void onClickButtonIrRuta(View view){
         Comunicador.setObjeto(null);
-        Intent i = new Intent(this, RutaActivity.class);
+        Intent i = new Intent(this, RutaActivity2.class);
         startActivity(i);
 
     }
 
 
-    public void onClickButtonCargarRuta(View view){
-        int posicion = (Integer)view.getTag();
-        respuestaWS = "error";
-        cargarRuta(Integer.toString(list.get(posicion).getID()));
-        while(esperandoThread){}
-        esperandoThread=true;
 
-            if(!respuestaWS.equals("error")) {
-                if(list.get(posicion).getPuntos().size()==0) {
-                    String puntosRuta[] = respuestaWS.split("-");
-                    for (int j = 0; j < puntosRuta.length; j++) {
-                        String punto[] = puntosRuta[j].split(",");
-                        System.out.println(punto[0] + "  " + punto[1]);
-                        list.get(posicion).agregarPunto(Float.parseFloat(punto[0]), Float.parseFloat(punto[1]));
-                    }
-                }
-                Comunicador.setObjeto(list.get(posicion));
-                Intent i = new Intent(this, RutaActivity.class);
-                startActivity(i);
-            }
-
-
-
-
-
-    }
 
 
     public void obtenerRutas()
@@ -266,4 +285,89 @@ public class ListarRutaActivity extends Activity {
 
     }
 
+
+    public void deleteSelected(View view) {
+        //Obtengo los elementos seleccionados de mi lista
+        SparseBooleanArray seleccionados = listViewRutas.getCheckedItemPositions();
+
+        if(seleccionados==null || seleccionados.size()==0){
+            //Si no había elementos seleccionados...
+            Toast.makeText(this, "No hay elementos seleccionados", Toast.LENGTH_SHORT).show();
+        }else{
+            //si los había, miro sus valores
+
+            //Esto es para ir creando un mensaje largo que mostraré al final
+            StringBuilder resultado=new StringBuilder();
+            resultado.append("Se eliminarán los siguientes elementos:\n");
+
+            //Recorro my "array" de elementos seleccionados
+            final int size=seleccionados.size();
+            for (int i=0; i<size; i++) {
+                //Si valueAt(i) es true, es que estaba seleccionado
+                if (seleccionados.valueAt(i)) {
+                    //en keyAt(i) obtengo su posición
+                    resultado.append("El elemento "+seleccionados.keyAt(i)+" estaba seleccionado\n");
+                }
+            }
+            Toast.makeText(this,resultado.toString(),Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    public void onClickCargaRutaPrueba(View view){                    ///}TESSST
+        SparseBooleanArray seleccionados = listViewRutas.getCheckedItemPositions();
+        if(seleccionados==null || seleccionados.size()==0) {
+            //Si no había elementos seleccionados...
+            Toast.makeText(this, "No hay elementos seleccionados", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            int seleccionado = 0;
+            for(int i = 0 ; i < seleccionados.size();i++){
+                if(seleccionados.valueAt(i)){
+                    seleccionado = i;
+                    break;
+                }
+
+            }
+
+            Comunicador.setObjeto(list.get(seleccionado));
+            Intent i = new Intent(this, RutaActivity2.class);
+            startActivity(i);
+
+
+        }
+    }
+
+
+    public void onClickButtonCargarRuta(View view){
+
+
+
+
+        int posicion = (Integer)view.getTag();
+        respuestaWS = "error";
+        cargarRuta(Integer.toString(list.get(posicion).getID()));
+        while(esperandoThread){}
+        esperandoThread=true;
+
+        if(!respuestaWS.equals("error")) {
+            if(list.get(posicion).getPuntos().size()==0) {
+                String puntosRuta[] = respuestaWS.split("-");
+                for (int j = 0; j < puntosRuta.length; j++) {
+                    String punto[] = puntosRuta[j].split(",");
+                    System.out.println(punto[0] + "  " + punto[1]);
+                    list.get(posicion).agregarPunto(Float.parseFloat(punto[0]), Float.parseFloat(punto[1]));
+                }
+            }
+            Comunicador.setObjeto(list.get(posicion));
+            Intent i = new Intent(this, RutaActivity.class);
+            startActivity(i);
+        }
+
+
+
+
+
+    }
 }

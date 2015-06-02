@@ -5,14 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
 
 /**
  * Created by Javier Aros on 12-05-2015.
- * Adapta la ruta para ser mostradas como una lista
+ * Adapta la rutaActivity para ser mostradas como una lista
  */
 public class ListaRutaAdapter extends BaseAdapter {
 
@@ -50,15 +49,28 @@ public class ListaRutaAdapter extends BaseAdapter {
 
         // Set data into the view.
 
-        TextView textViewIDRuta = (TextView) rowView.findViewById(R.id.textViewIDRuta);
-        textViewIDRuta.setText( ""+rutas.get(position).getID());
 
         TextView nombre = (TextView) rowView.findViewById((R.id.textViewNombreRuta));
-        nombre.setText(rutas.get(position).nombre);
+        TextView puntos = (TextView) rowView.findViewById((R.id.textViewPuntos));
+        TextView distancia = (TextView) rowView.findViewById((R.id.textViewDistanciaTotal));
 
-        Button buttonCargarRuta = (Button) rowView.findViewById(R.id.buttonCargarRuta);
-        buttonCargarRuta.setTag(position);
+        Ruta ruta = rutas.get(position);
+
+
+
+        //nombre rutaActivity
+        nombre.setText(ruta.nombre);
+
+        //puntos rutaActivity
+        puntos.setText("Puntos: 5");
+
+        //distancia recorrida
+        distancia.setText("Distancia 23.43 mts");
+
         return rowView;
     }
+
+
+
 
 }

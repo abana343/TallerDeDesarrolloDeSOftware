@@ -159,4 +159,9 @@ public class MainActivity extends Activity {
         startActivity(i);
 
     }
+
+    public void onClickButtonPruebaRutaSurface(View view){
+        Intent i = new Intent(this, RutaActivity2.class);
+        startActivity(i);
+    }
 }

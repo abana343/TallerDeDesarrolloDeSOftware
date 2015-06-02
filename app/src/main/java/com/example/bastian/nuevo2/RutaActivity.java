@@ -21,7 +21,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import org.ksoap2.SoapEnvelope;
@@ -42,7 +41,7 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
     float downx = 0, downy = 0, upx = 0, upy = 0;
 
 
-    private ListView listView;
+   // private ListView listView;
 
     //
     private Ruta ruta;
@@ -62,11 +61,11 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
         setContentView(R.layout.activity_ruta);
 
         imageView = (ImageView) this.findViewById(R.id.imageView);
-        //Carga ruta
+        //Carga rutaActivity
         ruta = (Ruta)Comunicador.getObjeto();
         if (ruta == null)
         {
-            //Si no existe ruta guardada crea una nueva
+            //Si no existe rutaActivity guardada crea una nueva
             ruta = new Ruta();
         }
         else{
@@ -80,13 +79,13 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
 
         inicializarImageView();
         imageView.setOnTouchListener(this);
-        this.listView = (ListView) findViewById(R.id.listView);
+        //this.listView = (ListView) findViewById(R.id.listView);
 
 
 
 
 
-        this.listView.setAdapter(new RutaAdapter(this,ruta.getLista()));
+        //this.listView.setAdapter(new RutaAdapter(this,rutaActivity.getLista()));
 
 
         editarPunto =  -1;
@@ -119,7 +118,7 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
                     break;
             }
             ruta.actualizarLista();
-            listView.setAdapter(new RutaAdapter(this, ruta.getLista()));
+            //listView.setAdapter(new RutaAdapter(this, rutaActivity.getLista()));
 
         }
 
@@ -170,7 +169,7 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
                     v.destroyDrawingCache();
                     ruta.canvas =canvas;
                     ruta.agregarPunto(upx,upy);
-                    listView.setAdapter(new RutaAdapter(this, ruta.getLista()));
+                    //listView.setAdapter(new RutaAdapter(this, rutaActivity.getLista()));
 
                     downx = upx;
                     downy = upy;
@@ -284,7 +283,7 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
         {
             ruta.eliminarPunto(0);
         }
-        listView.setAdapter(new RutaAdapter(this, ruta.getLista()));
+        //listView.setAdapter(new RutaAdapter(this, rutaActivity.getLista()));
 
         this.editarPunto = -1;
         if (posicion+1 == ruta.getPuntos().size()) {
@@ -303,13 +302,13 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
     public void onClickButtonGuardarRuta(View view){
 
         if(ruta.getPuntos().size()==0){
-            Toast.makeText(context, "Agrega puntos  a ruta", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Agrega puntos  a rutaActivity", Toast.LENGTH_SHORT).show();
         }
         else {
             // custom dialog
             final Dialog dialog = new Dialog(context);
             dialog.setContentView(R.layout.dialog_ruta);
-            dialog.setTitle("Nombre de la ruta");
+            dialog.setTitle("Nombre de la rutaActivity");
 
             // set the custom dialog components - text, image and button
             final EditText text = (EditText) dialog.findViewById(R.id.editTextNombreRuta);
@@ -329,7 +328,7 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
                 @Override
                 public void onClick(View v) {
                     if (text.getText().toString().length() == 0) {
-                        Toast.makeText(context, "Ingresa nombre de ruta", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Ingresa nombre de rutaActivity", Toast.LENGTH_SHORT).show();
                     } else {
 
 
@@ -388,7 +387,6 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
                 HttpTransportSE transportSE = new HttpTransportSE(URL);
                 try {
                     transportSE.call(SOAP_ACTION,envelope);
-                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
                     respuestaServidor = "Ruta Guardada";
                     esperandoThread = false;
                 } catch (IOException e) {

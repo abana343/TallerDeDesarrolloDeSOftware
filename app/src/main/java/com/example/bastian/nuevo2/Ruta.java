@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * Created by Javier Aros on 23-04-2015.
- * Contiene los puntos de una ruta
+ * Contiene los puntos de una rutaActivity
  */
 public class Ruta {
 
@@ -87,11 +87,23 @@ public class Ruta {
     }
 
 
+    public Point getUltimoPunto(){
+        int i = puntos.size();
+        if (i != 0)
+            return puntos.get(i);
+        else
+            return null;
+    }
+
 
     public void eliminarPunto(int i)
     {
-        puntos.remove(i);
-        actualizarLista();
+
+        if(puntos.size() > i && puntos.size() != 0 && i != -1) {
+            System.out.println(puntos.size() + "  " +i);
+            puntos.remove(i);
+            actualizarLista();
+        }
 
     }
 

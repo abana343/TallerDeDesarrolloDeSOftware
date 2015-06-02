@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * Created by Javier Aros on 23-04-2015.
- * Adapta los punts de una ruta para ser mostrados como una lista
+ * Adapta los punts de una rutaActivity para ser mostrados como una lista
  */
 public class RutaAdapter extends BaseAdapter {
 
@@ -57,7 +57,7 @@ public class RutaAdapter extends BaseAdapter {
         TextView identificador = (TextView) rowView.findViewById((R.id.identificadorNumerico));
         identificador.setText(Integer.toString(position+1) + "-" + Integer.toString(position+2));
        //imagenRuta.setImageResource(R.drawable.number1);
-        //imagenRuta.setImageBitmap(ruta.bitmap);
+        //imagenRuta.setImageBitmap(rutaActivity.bitmap);
         ImageButton botonCerrar = (ImageButton) rowView.findViewById(R.id.buttonEliminar);
         botonCerrar.setTag(position);
         ImageButton botonEditar = (ImageButton) rowView.findViewById(R.id.buttonEditar);

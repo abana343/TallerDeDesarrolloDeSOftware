@@ -12,5 +12,7 @@
     <string name="title_activity_movimiento">movimiento</string>
     <string name="title_activity_listar_ruta">ListarRutaActivity</string>
     <string name="ipwebservice">172.26.201.4</string>
+    <string name="title_activity_ruta_activity2">RutaActivity2</string>
+
 
 </resources>
