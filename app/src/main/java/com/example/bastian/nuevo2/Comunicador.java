@@ -13,6 +13,8 @@ class Comunicador {
     private static String IpRobotino = "172.26.201.3";
     public static final String NAMESPACE = "http://services.ws.rws/";
 
+    public static boolean camara;
+    private static int movimiento;
 
 
     public static String getIpRobotino() {
@@ -39,5 +41,27 @@ class Comunicador {
         return objeto;
     }
 
+    public static String getNamespace(){
+        return NAMESPACE;
+    }
+
+    public static void setMovimiento(int mov)
+    {
+        movimiento=mov;
+    }
+    public static int getMovimiento()
+    {
+        return movimiento;
+    }
+
+    public static void setCamara(boolean cam)
+    {
+        camara=cam;
+    }
+
+    public static boolean getCamara()
+    {
+        return camara;
+    }
 
 }

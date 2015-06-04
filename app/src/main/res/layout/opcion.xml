@@ -100,7 +100,7 @@
             android:layout_column="0"
             android:background="@drawable/btn_circle"
             android:scaleType="fitXY"
-            android:onClick="adelante" />
+            android:onClick="tactil" />
 
         <ImageButton
             android:layout_width="140dp"
@@ -112,7 +112,7 @@
             android:scaleType="fitXY"
             android:background="@drawable/btn_circle"
             android:layout_marginRight="10dp"
-            android:onClick="parar" />
+            android:onClick="clasico" />
 
 
     </GridLayout>

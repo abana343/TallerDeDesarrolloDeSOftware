@@ -18,19 +18,28 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageButton5"
+        android:id="@+id/gi"
         android:layout_gravity="left|bottom"
-        android:src="@drawable/botonpress"
+        android:src="@drawable/ccl"
         android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_circle"
         android:onClick="gizquierda" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageButton6"
+        android:id="@+id/gd"
         android:layout_gravity="right|bottom"
-        android:src="@drawable/botonlibre"
+        android:src="@drawable/cl"
         android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_circle"
+        android:clickable="false"
         android:onClick="gderecha" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="326dp"
+        android:id="@+id/camara"
+        android:layout_gravity="center_horizontal|top" />
 
 </FrameLayout>

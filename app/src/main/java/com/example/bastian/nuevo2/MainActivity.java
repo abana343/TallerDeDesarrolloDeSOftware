@@ -24,7 +24,7 @@ import java.io.IOException;
 public class MainActivity extends Activity {
 
     public String server;
-    private static final String NAMESPACE = "http://services.ws.robotino/";
+    private static final String NAMESPACE = "http://services.ws.rws/";
 
     public float init_x;
     ViewFlipper vf;
@@ -40,6 +40,9 @@ public class MainActivity extends Activity {
 
         EditText editTextServer = (EditText) findViewById(R.id.IpWebservice);
         editTextServer.setText(R.string.ipwebservice);
+
+        EditText editTextrobot = (EditText) findViewById(R.id.IpRobotino);
+        editTextrobot.setText(R.string.iprobotino);
     }
 
 
@@ -75,7 +78,7 @@ public class MainActivity extends Activity {
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
-            String respuesta;
+            String respuesta="error de coneccion";
             @Override
             public void run()
             {
@@ -163,5 +166,18 @@ public class MainActivity extends Activity {
     public void onClickButtonPruebaRutaSurface(View view){
         Intent i = new Intent(this, RutaActivity2.class);
         startActivity(i);
+    }
+
+    public void clasico(View view)
+    {
+        Comunicador.setMovimiento(1);
+        this.onClickButtonIrMovimiento(view);
+
+    }
+
+    public void tactil(View view)
+    {
+        Comunicador.setMovimiento(2);
+        this.onClickButtonIrMovimiento(view);
     }
 }

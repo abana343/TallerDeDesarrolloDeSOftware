@@ -271,6 +271,7 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public void reinicioTouch(){
         touchX = -1;
         touchY = -1;
+        seleccionNodoEliminar = -1;
     }
 
 

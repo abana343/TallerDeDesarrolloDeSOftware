@@ -1,9 +1,12 @@
 package com.example.bastian.nuevo2;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +23,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 
 
-public class RutaActivity2 extends Activity {
+public class RutaActivity2 extends Activity{
     RutaSurfaceView surfaceView;
 
     ToggleButton botonAgregarNodo;
@@ -218,5 +221,34 @@ public class RutaActivity2 extends Activity {
         };
 
         nt.start();
+    }
+
+
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Salir")
+                    .setMessage("Estás seguro?")
+                    .setNegativeButton(android.R.string.cancel, null)//sin listener
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {//un listener que al pulsar, cierre la aplicacion
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+                            //Salir
+                            finish();
+                        }
+                    })
+                    .show();
+
+            // Si el listener devuelve true, significa que el evento esta procesado, y nadie debe hacer nada mas
+            return true;
+        }
+//para las demas cosas, se reenvia el evento al listener habitual
+        return super.onKeyDown(keyCode, event);
     }
 }

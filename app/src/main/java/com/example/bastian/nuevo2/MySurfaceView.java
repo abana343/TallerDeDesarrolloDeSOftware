@@ -25,6 +25,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     private movimiento mov;
     private float movx=0,movy=0;
     private boolean adentro=false;
+    private int ejecutandose=0;
 
 
 
@@ -61,7 +62,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceDestroyed(SurfaceHolder holder)
     {
         Log.e("surfaceDestroyed","hilo detenido");
-
+        Comunicador.setCamara(false);
         boolean retry = true;
         //el hilo se detendra.
         this.thread.setRuning(false);
@@ -177,13 +178,18 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 Log.e("TouchEven ACTION_UP", "ya no tocamos la pantalla");
                 Log.e("parar","parado");
                 mov.parar(this);
+                ejecutandose=0;
                 break;
             case MotionEvent.ACTION_CANCEL:
                 touched=false;
                 Log.e("TouchEven ACTION_CANCEL","");
+                mov.parar(this);
+                ejecutandose=0;
                 break;
             case MotionEvent.ACTION_OUTSIDE:
                 touched=false;
+                mov.parar(this);
+                ejecutandose=0;
                 break;
             default:
         }
@@ -207,12 +213,21 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 {
                     if(this.movx<0)
                     {
-                        Log.e("mover en ","diagonal arriba iz");
-                        mov.dNO(this);
+                        if(ejecutandose!=1)
+                        {
+                            Log.e("mover en ","diagonal arriba iz");
+                            mov.dNO(this);
+                            ejecutandose=1;
+                        }
                     }else
                     {
-                        Log.e("mover en ","diagonal abajo der");
-                        mov.dSE(this);
+                        if(ejecutandose!=2)
+                        {
+                            Log.e("mover en ","diagonal abajo der");
+                            mov.dSE(this);
+                            ejecutandose=2;
+                        }
+
                     }
                 }
                 //................
@@ -220,12 +235,18 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 {
                     if(this.movx<0)
                     {
-                        Log.e("mover en ","diagonal abajo iz");
-                        mov.dSO(this);
+                        if(ejecutandose!=3){
+                            Log.e("mover en ","diagonal abajo iz");
+                            mov.dSO(this);
+                            ejecutandose=3;
+                        }
                     }else
                     {
-                        Log.e("mover en ","diagonal arriba der");
-                        mov.dNE(this);
+                        if(ejecutandose!=4) {
+                            Log.e("mover en ", "diagonal arriba der");
+                            mov.dNE(this);
+                            ejecutandose=4;
+                        }
                     }
                 }
                 //................
@@ -233,12 +254,20 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 {
                     if(this.movx<0)
                     {
-                        Log.e("mover en ","Izquierda");
-                        mov.izquierda(this);
+                        if(ejecutandose!=5) {
+                            Log.e("mover en ", "Izquierda");
+                            mov.izquierda(this);
+                            ejecutandose=5;
+                        }
                     }else
                     {
-                        Log.e("mover en ","derecha");
-                        mov.derecha(this);
+                        if(ejecutandose!=6)
+                        {
+                            Log.e("mover en ","derecha");
+                            mov.derecha(this);
+                            ejecutandose=6;
+                        }
+
                     }
                 }
                 //................
@@ -246,12 +275,18 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 {
                     if(this.movy<0)
                     {
-                        Log.e("mover en ","arriba");
-                        mov.adelante(this);
+                        if(ejecutandose!=7) {
+                            Log.e("mover en ", "arriba");
+                            mov.adelante(this);
+                            ejecutandose=7;
+                        }
                     }else
                     {
-                        Log.e("mover en ","abajo");
-                        mov.atras(this);
+                        if(ejecutandose!=8) {
+                            Log.e("mover en ", "abajo");
+                            mov.atras(this);
+                            ejecutandose=8;
+                        }
                     }
                 }
 
@@ -259,13 +294,19 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             {
                 if(movy<0)
                 {
-                    Log.e("mover en ","arriba");
-                    mov.adelante(this);
+                    if(ejecutandose!=7){
+                        Log.e("mover en ","arriba");
+                        mov.adelante(this);
+                        ejecutandose=7;
+                    }
                 }
                 else
                 {
-                    Log.e("mover en ","abajo");
-                    mov.atras(this);
+                    if(ejecutandose!=8) {
+                        Log.e("mover en ", "abajo");
+                        mov.atras(this);
+                        ejecutandose=8;
+                    }
                 }
             }
         }

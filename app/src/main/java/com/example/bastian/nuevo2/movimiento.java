@@ -1,11 +1,16 @@
 package com.example.bastian.nuevo2;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -20,11 +25,17 @@ import java.io.IOException;
 public class movimiento extends Activity {
 
 
-    private static final String NAMESPACE = "http://services.ws.robotino/";
-    private static String URL = "http://192.168.1.129:8080/RBTNWS/RobotinoServices";//no sirve localhost si no se usa el emulador propio de androidstudio
-    private static String server="172.26.201.1";
+    private static final String NAMESPACE = "http://services.ws.rws/";
+    private static String URL = "http://172.26.201.4:8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
+    private static String server="172.26.201.4";
 
     private MySurfaceView analog;
+
+    private int mov;
+    private ImageView iv;
+
+
+    private int parar=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,22 +46,40 @@ public class movimiento extends Activity {
         //ocultamos la barra de notificaciones
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //se define que en ves de usar una vista de Layout se usa la vista entregada por MySurfaceView
-        setContentView(R.layout.activity_movimiento);
+        iniciar();
 
-        try {
-            analog = (MySurfaceView) findViewById(R.id.analogo);
-            analog.setMovimiento(this);
+    }
+
+    public void iniciar()
+    {
+        mov=Comunicador.getMovimiento();
+        if(1 == mov)
+        {
+            setContentView(R.layout.movimiento_clasico);
+            iv=(ImageView) findViewById(R.id.camara1);
 
         }
-        catch (Exception e){}
+        else
+        {
+            setContentView(R.layout.activity_movimiento);
+            iv=(ImageView) findViewById(R.id.camara);
+            try {
+                analog = (MySurfaceView) findViewById(R.id.analogo);
+                analog.setMovimiento(this);
+            }
+            catch (Exception e){}
+        }
 
         try {
-            EditText editTextServer = (EditText) findViewById(R.id.IpWebservice);
-            server = editTextServer.getText().toString();//192.168.56.1
-            URL= "http://"+server+":8080/RBTNWS/RobotinoServices";
+        }catch (Exception e){}
+        try {
+            server = Comunicador.getIpWebService();
+            URL= "http://"+server+":8080/WSR/Servicios";
         }catch (Exception e){}
 
         Log.e("server=",""+server);
+        Comunicador.setCamara(true);
+        pedirImagen2();
     }
 
     /*
@@ -76,6 +105,69 @@ public class movimiento extends Activity {
         return super.onOptionsItemSelected(item);
     }
     */
+
+    public void pedirImagen2()
+    {
+        //esta parte se agrego para poder pedir la imagen sin necesidad de conectar ya que toma la ip del server del edittext
+        //EditText editTextServer = (EditText) findViewById(R.id.editTextIpServer);
+        // String localserver = editTextServer.getText().toString();//192.168.56.1
+        //localserver = "192.168.1.40";
+        final String URL = "http://"+server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
+        //final String URL = "http://" + server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
+        final String METHOD_NAME = "imagen";//mediaDatosSensores
+        final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+        Thread nt = new Thread()
+        {
+            String respuesta;
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                //quiza poner ciclo aqui
+                //Thread.sleep(100);
+                try {
+                    while (Comunicador.getCamara()) {
+                        Thread.sleep(100);
+                        try {
+                            transportSE.call(SOAP_ACTION,envelope);
+                            SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                            respuesta = resultado.toString();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (XmlPullParserException e) {
+                            e.printStackTrace();
+                        }
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    byte[] decodedByte = Base64.decode(respuesta, 0);
+                                    Bitmap bitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+                                    iv.setImageBitmap(bitmap);
+                                }
+                                catch (Exception e)
+                                {
+                                    //Bitmap bitmap= BitmapFactory.decodeStream();
+                                    //iv.setImageDrawable(R.id.);
+                                }
+
+
+                                //Toast.makeText(MainActivity.this,String.valueOf(contador),Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        nt.start();
+    }
 
     public void parar(View view)
     {
@@ -104,7 +196,7 @@ public class movimiento extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                      //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -115,7 +207,7 @@ public class movimiento extends Activity {
 
     public void adelante(View view)
     {
-        final String METHOD_NAME = "adelante";
+        final String METHOD_NAME = "N";
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
@@ -151,7 +243,7 @@ public class movimiento extends Activity {
 
     public void atras(View view)
     {
-        final String METHOD_NAME = "atras";
+        final String METHOD_NAME = "S";
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
@@ -187,7 +279,7 @@ public class movimiento extends Activity {
 
     public void derecha(View view)
     {
-        final String METHOD_NAME = "derecha";
+        final String METHOD_NAME = "E";
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
@@ -223,7 +315,7 @@ public class movimiento extends Activity {
 
     public void izquierda(View view)
     {
-        final String METHOD_NAME = "izquierda";
+        final String METHOD_NAME = "O";
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
@@ -259,7 +351,7 @@ public class movimiento extends Activity {
 
     public void dNE(View view)
     {
-        final String METHOD_NAME = "dNE";
+        final String METHOD_NAME = "NE";
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
@@ -295,7 +387,7 @@ public class movimiento extends Activity {
 
     public void dSO(View view)
     {
-        final String METHOD_NAME = "dSO";
+        final String METHOD_NAME = "SO";
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
@@ -331,7 +423,7 @@ public class movimiento extends Activity {
 
     public void dSE(View view)
     {
-        final String METHOD_NAME = "dSE";
+        final String METHOD_NAME = "SE";
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
@@ -367,7 +459,7 @@ public class movimiento extends Activity {
 
     public void dNO(View view)
     {
-        final String METHOD_NAME = "dNO";
+        final String METHOD_NAME = "NO";
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
@@ -403,7 +495,7 @@ public class movimiento extends Activity {
 
     public void gizquierda(View view)
     {
-        final String METHOD_NAME = "gizquierda";
+        final String METHOD_NAME = "giroIzquierda";
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
@@ -439,7 +531,7 @@ public class movimiento extends Activity {
 
     public void gderecha(View view)
     {
-        final String METHOD_NAME = "gderecha";
+        final String METHOD_NAME = "giroDerecha";
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
