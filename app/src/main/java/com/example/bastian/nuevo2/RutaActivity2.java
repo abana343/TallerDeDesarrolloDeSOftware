@@ -130,7 +130,7 @@ public class RutaActivity2 extends Activity{
 
             // set the custom dialog components - text, image and button
             final EditText text = (EditText) dialog.findViewById(R.id.editTextNombreRuta);
-
+            text.setText(surfaceView.ruta.getNombre());
 
             Button dialogButtonCancelar = (Button) dialog.findViewById(R.id.dialogButtonCancelar);
             // if button is clicked, close the custom dialog
@@ -173,8 +173,16 @@ public class RutaActivity2 extends Activity{
                         int escala = Integer.parseInt(escalaText.getText().toString());
                         surfaceView.ruta.setEscala(escala);
                         surfaceView.ruta.setNombre(text.getText().toString());
-                        Comunicador.getBaseDatoRuta().InsertarRuta(surfaceView.ruta);
-                        Toast.makeText(context, "Ruta guardada", Toast.LENGTH_SHORT).show();
+                        if(surfaceView.ruta.getID() == -1){
+                            Comunicador.getBaseDatoRuta().InsertarRuta(surfaceView.ruta);
+                            Toast.makeText(context, "Ruta guardada", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Comunicador.getBaseDatoRuta().editarRuta(surfaceView.ruta);
+                            Toast.makeText(context, "Ruta editada", Toast.LENGTH_SHORT).show();
+
+                        }
+
                         dialog.dismiss();
 
                     }

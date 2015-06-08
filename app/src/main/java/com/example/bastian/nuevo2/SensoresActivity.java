@@ -1,5 +1,6 @@
 package com.example.bastian.nuevo2;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBarActivity;
@@ -22,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class SensoresActivity extends ActionBarActivity {
+public class SensoresActivity extends Activity {
 
 
     private static final String NAMESPACE = "http://services.ws.rws/";
@@ -35,7 +36,6 @@ public class SensoresActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensores);
-
         this.sensores= (ListView) findViewById(R.id.listsensores);
         try {
             server = Comunicador.getIpWebService();

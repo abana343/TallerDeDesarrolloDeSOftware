@@ -31,7 +31,8 @@ public class Ruta {
     {
         this.puntos = new ArrayList<>();
         this.lista = new ArrayList<String>();
-        this.nombre = "nombre";  ///editar
+        this.nombre = "";
+        this.setID(-1);
     }
 
 

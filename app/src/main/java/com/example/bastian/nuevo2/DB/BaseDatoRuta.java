@@ -45,10 +45,34 @@ public class BaseDatoRuta extends SQLiteOpenHelper {
 
     public void InsertarRuta(Ruta ruta){
         db.insert(TablaRuta.TABLE_NAME,null,generaValoresRuta(ruta));
-        int ultimoID = getUltimoIdTablaRuta() -1 ;
-        for(Point point:ruta.getPuntos()){
-            db.insert(TablaPasosRuta.TABLE_NAME,null,generarValoresPasosRuta(point, ultimoID));
+        int ultimoID = getUltimoIdTablaRuta();
+        insertarPuntoRuta(ruta.getPuntos(),ultimoID);
+
+    }
+
+
+    public void editarRuta(Ruta ruta){
+        ContentValues valores = new ContentValues();
+        valores.put(TablaRuta.FIELD_NOMBRE_RUTA, ruta.getNombre());
+        valores.put(TablaRuta.FIELD_ESCALA, ruta.getEscala());
+        db.update(TablaRuta.TABLE_NAME, valores, TablaRuta.FIELD_ID+ "=" + ruta.getID(), null);
+
+        eliminarPuntosRuta(ruta.getID());
+        insertarPuntoRuta(ruta.getPuntos(),ruta.getID());
+    }
+
+    private void insertarPuntoRuta(ArrayList<Point> puntos , int id){
+        for(Point point:puntos){
+            db.insert(TablaPasosRuta.TABLE_NAME, null, generarValoresPasosRuta(point, id));
         }
+    }
+
+    public void eliminarRuta(int id){
+        db.delete(TablaRuta.TABLE_NAME, TablaRuta.FIELD_ID + " = " + id, null);
+    }
+
+    private void eliminarPuntosRuta(int id){
+        db.delete(TablaPasosRuta.TABLE_NAME, TablaPasosRuta.FIELD_ID_RUTA + " = " + id, null);
     }
 
 
@@ -83,7 +107,7 @@ public class BaseDatoRuta extends SQLiteOpenHelper {
 
     public ArrayList<Point> getPuntosRuta(int IdRuta){
         ArrayList<Point> puntos = new ArrayList<>();
-        IdRuta--;
+        //IdRuta--;
         System.out.println("IdRuta " + IdRuta);
         //String query = "select X,Y from " + TablaPasosRuta.TABLE_NAME + " where " + TablaPasosRuta.FIELD_ID_RUTA + " =?";
         String[] campos = new String[] {"X","Y","idRuta"};

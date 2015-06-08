@@ -35,6 +35,8 @@ public class ListarRutaActivity extends Activity {
 
     private Context context;
 
+    private ListaRutaAdapter adapterRuta;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +51,8 @@ public class ListarRutaActivity extends Activity {
 
 
 
-
-        this.listViewRutas.setAdapter(new ListaRutaAdapter(this,list));
+        adapterRuta=new ListaRutaAdapter(this,list);
+        this.listViewRutas.setAdapter(adapterRuta);
         this.listViewRutas.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 /*                        DESCOMENTAR <----------------------------------------
         obtenerRutas();
@@ -304,22 +306,21 @@ public class ListarRutaActivity extends Activity {
             //Si no había elementos seleccionados...
             Toast.makeText(this, "No hay elementos seleccionados", Toast.LENGTH_SHORT).show();
         }else{
-            //si los había, miro sus valores
-
-            //Esto es para ir creando un mensaje largo que mostraré al final
-            StringBuilder resultado=new StringBuilder();
-            resultado.append("Se eliminarán los siguientes elementos:\n");
-
-            //Recorro my "array" de elementos seleccionados
+            int resultado = 0;
             final int size=seleccionados.size();
             for (int i=0; i<size; i++) {
-                //Si valueAt(i) es true, es que estaba seleccionado
                 if (seleccionados.valueAt(i)) {
-                    //en keyAt(i) obtengo su posición
-                    resultado.append("El elemento "+seleccionados.keyAt(i)+" estaba seleccionado\n");
+                    resultado = seleccionados.keyAt(i);
+
                 }
             }
-            Toast.makeText(this,resultado.toString(),Toast.LENGTH_LONG).show();
+
+            Comunicador.getBaseDatoRuta().eliminarRuta(list.get(resultado).getID());
+            list = cargarRutaInterna();
+            adapterRuta.setdatos(list);
+
+
+
         }
     }
     public void onClickCargaRutaPrueba(View view){                    ///}TESSST
@@ -332,14 +333,11 @@ public class ListarRutaActivity extends Activity {
             int resultado = 0;
             final int size=seleccionados.size();
             for (int i=0; i<size; i++) {
-                System.out.println("ante entro " + i);
                 if (seleccionados.valueAt(i)) {
-                    System.out.println("entro");
                     resultado = seleccionados.keyAt(i);
 
                 }
             }
-            System.out.println("selecionado   "+resultado);
             Comunicador.getBaseDatoRuta().cargarPuntosARuta(list.get(resultado));
             Comunicador.setObjeto(list.get(resultado));
             Intent i = new Intent(this, RutaActivity2.class);

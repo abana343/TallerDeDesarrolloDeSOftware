@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,4 +65,6 @@ public class RutaAdapter extends BaseAdapter {
         botonEditar.setTag(position);
         return rowView;
     }
+
+
 }

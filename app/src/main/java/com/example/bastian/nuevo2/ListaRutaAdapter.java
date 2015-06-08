@@ -70,6 +70,11 @@ public class ListaRutaAdapter extends BaseAdapter {
         return rowView;
     }
 
+    public void setdatos(List<Ruta> rutas){
+        this.rutas = rutas;
+        notifyDataSetChanged();
+    }
+
 
 
 
