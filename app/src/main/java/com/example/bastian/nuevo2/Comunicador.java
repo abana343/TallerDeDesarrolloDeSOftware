@@ -23,6 +23,8 @@ class Comunicador {
     public static boolean camara;
     private static int movimiento;
 
+    private static String[] sensores;
+
 
     public static String getIpRobotino() {
         return IpRobotino;
@@ -91,4 +93,13 @@ class Comunicador {
     }
 
 
+    public static void setSensores(String [] sen)
+    {
+        sensores = sen;
+    }
+
+    public static String[] getSensores()
+    {
+        return sensores;
+    }
 }

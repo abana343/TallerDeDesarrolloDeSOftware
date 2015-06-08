@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/robotinot"
@@ -35,6 +34,10 @@
         <activity
             android:name=".RutaActivity2"
             android:label="@string/title_activity_ruta_activity2" >
+        </activity>
+        <activity
+            android:name=".SensoresActivity"
+            android:label="@string/title_activity_sensores" >
         </activity>
     </application>
 

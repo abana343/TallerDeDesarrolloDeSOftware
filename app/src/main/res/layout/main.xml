@@ -95,7 +95,8 @@
             android:background="@drawable/btn_circle"
             android:layout_gravity="right"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:onClick="onClickButtonIrSensores" />
     </GridLayout>
 
 </LinearLayout>

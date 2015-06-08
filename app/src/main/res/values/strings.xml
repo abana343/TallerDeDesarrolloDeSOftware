@@ -14,6 +14,7 @@
     <string name="ipwebservice">172.26.201.4</string>
     <string name="iprobotino">172.26.201.3</string>
     <string name="title_activity_ruta_activity2">RutaActivity2</string>
+    <string name="title_activity_sensores">SensoresActivity</string>
 
 
 </resources>
