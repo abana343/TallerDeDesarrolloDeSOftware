@@ -22,7 +22,7 @@ public class Ruta {
     public Canvas canvas;
     public String nombre;
 
-    int escala;
+    public int escala;
     int widthPantalla;
     int heightPantalla;
 
@@ -111,5 +111,27 @@ public class Ruta {
         return ID;
     }
 
+    public void setID(int ID) {
+        this.ID = ID;
+    }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getEscala() {
+        return escala;
+    }
+
+    public void setEscala(int escala) {
+        this.escala = escala;
+    }
+
+    public void setPuntos(ArrayList<Point> puntos) {
+        this.puntos = puntos;
+    }
 }

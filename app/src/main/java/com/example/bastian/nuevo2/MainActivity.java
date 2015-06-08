@@ -12,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.example.bastian.nuevo2.DB.BaseDatoRuta;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
@@ -29,6 +31,8 @@ public class MainActivity extends Activity {
     public float init_x;
     ViewFlipper vf;
 
+    BaseDatoRuta baseDato;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +47,8 @@ public class MainActivity extends Activity {
 
         EditText editTextrobot = (EditText) findViewById(R.id.IpRobotino);
         editTextrobot.setText(R.string.iprobotino);
+        baseDato = new BaseDatoRuta(this);
+        Comunicador.setBaseDatoRuta(baseDato);
     }
 
 

@@ -1,5 +1,10 @@
 package com.example.bastian.nuevo2;
 
+import android.content.Context;
+import android.telephony.TelephonyManager;
+
+import com.example.bastian.nuevo2.DB.BaseDatoRuta;
+
 /**
  * Created by Javier Aros on 14-05-2015.
  * Enviar objeto entre diferentes ativity
@@ -8,6 +13,8 @@ class Comunicador {
     private static Object objeto = null;
 
 
+
+    private static BaseDatoRuta baseDatoRuta = null;
 
     private static String IpWebService = "172.17.50.211";
     private static String IpRobotino = "172.26.201.3";
@@ -63,5 +70,25 @@ class Comunicador {
     {
         return camara;
     }
+
+
+
+    public static String getIMEI(Context context){
+
+        TelephonyManager mngr = (TelephonyManager) context.getSystemService(context.TELEPHONY_SERVICE);
+        String imei = mngr.getDeviceId();
+        return imei;
+
+    }
+
+
+    public static BaseDatoRuta getBaseDatoRuta() {
+        return baseDatoRuta;
+    }
+
+    public static void setBaseDatoRuta(BaseDatoRuta baseDatoRuta) {
+        Comunicador.baseDatoRuta = baseDatoRuta;
+    }
+
 
 }

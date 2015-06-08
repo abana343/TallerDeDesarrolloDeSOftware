@@ -13,9 +13,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
@@ -149,7 +149,7 @@ public class RutaActivity2 extends Activity{
                         Toast.makeText(context, "Ingresa nombre de ruta", Toast.LENGTH_SHORT).show();
                     } else {
 
-
+                        /*
                         String listaPuntos = "" + text.getText() + "-";
                         for (int i = 0; i < surfaceView.ruta.getPuntos().size(); i++) {
                             listaPuntos += "(" + surfaceView.ruta.getPuntos().get(i).x + "," + surfaceView.ruta.getPuntos().get(i).y + ")-";
@@ -162,12 +162,20 @@ public class RutaActivity2 extends Activity{
                         //Toast.makeText(context, "Guardado", Toast.LENGTH_SHORT).show();
                         //dialog.dismiss();
                         GuardarRuta(listaPuntos);
+
                         while(esperandoThread)
                         {
                         }
                         Toast.makeText(context, respuestaServidor, Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
-
+                        */                    //DAtos para guardar en WS
+                        EditText escalaText = (EditText) findViewById(R.id.escala);
+                        int escala = Integer.parseInt(escalaText.getText().toString());
+                        surfaceView.ruta.setEscala(escala);
+                        surfaceView.ruta.setNombre(text.getText().toString());
+                        Comunicador.getBaseDatoRuta().InsertarRuta(surfaceView.ruta);
+                        Toast.makeText(context, "Ruta guardada", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
 
                     }
                 }

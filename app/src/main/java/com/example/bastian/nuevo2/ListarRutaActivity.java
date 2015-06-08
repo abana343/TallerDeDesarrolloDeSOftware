@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
@@ -20,7 +21,6 @@ import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class ListarRutaActivity extends Activity {
 
         this.listViewRutas = (ListView) findViewById(R.id.listViewRutas);
 
-        list = ruta();
+        list = cargarRutaInterna();
 
 
 
@@ -59,7 +59,7 @@ public class ListarRutaActivity extends Activity {
 
         }
 
-        */
+
         esperandoThread=true;
         if(!respuestaWS.equals("error"))
         {
@@ -69,6 +69,7 @@ public class ListarRutaActivity extends Activity {
         }
         context = getApplicationContext();
         cargado();
+        */
     }
 
 
@@ -129,6 +130,10 @@ public class ListarRutaActivity extends Activity {
         }
         return list;
 
+    }
+
+    public List<Ruta> cargarRutaInterna(){
+        return Comunicador.getBaseDatoRuta().getRutas();
     }
 
 
@@ -272,7 +277,8 @@ public class ListarRutaActivity extends Activity {
         return rutas;
     }
 
-    public void onClickButtonActualizarRutas(View view){
+    public void onClickButtonActualizarRutas(View view){   ///////Arreglarr
+        /*                     DESCOMENTAR
         obtenerRutas();
         while(esperandoThread) {}
         esperandoThread=true;
@@ -281,6 +287,10 @@ public class ListarRutaActivity extends Activity {
             list = crearRutas();
 
             this.listViewRutas.setAdapter(new ListaRutaAdapter(this,list));
+        }
+        */
+        for(Ruta ruta:list){
+            System.out.println("nombre: "+ ruta.nombre + " escala: "+ ruta.escala + " id: " + ruta.getID());
         }
 
     }
@@ -312,31 +322,31 @@ public class ListarRutaActivity extends Activity {
             Toast.makeText(this,resultado.toString(),Toast.LENGTH_LONG).show();
         }
     }
-
-
     public void onClickCargaRutaPrueba(View view){                    ///}TESSST
         SparseBooleanArray seleccionados = listViewRutas.getCheckedItemPositions();
         if(seleccionados==null || seleccionados.size()==0) {
             //Si no había elementos seleccionados...
             Toast.makeText(this, "No hay elementos seleccionados", Toast.LENGTH_SHORT).show();
         }
-        else
-        {
-            int seleccionado = 0;
-            for(int i = 0 ; i < seleccionados.size();i++){
-                if(seleccionados.valueAt(i)){
-                    seleccionado = i;
-                    break;
+        else{
+            int resultado = 0;
+            final int size=seleccionados.size();
+            for (int i=0; i<size; i++) {
+                System.out.println("ante entro " + i);
+                if (seleccionados.valueAt(i)) {
+                    System.out.println("entro");
+                    resultado = seleccionados.keyAt(i);
+
                 }
-
             }
-
-            Comunicador.setObjeto(list.get(seleccionado));
+            System.out.println("selecionado   "+resultado);
+            Comunicador.getBaseDatoRuta().cargarPuntosARuta(list.get(resultado));
+            Comunicador.setObjeto(list.get(resultado));
             Intent i = new Intent(this, RutaActivity2.class);
             startActivity(i);
 
-
         }
+
     }
 
 
