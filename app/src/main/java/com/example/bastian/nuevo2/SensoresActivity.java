@@ -31,12 +31,17 @@ public class SensoresActivity extends Activity {
     private static String server="172.26.201.4";
 
     private ListView sensores;
+    private SensoresAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensores);
         this.sensores= (ListView) findViewById(R.id.listsensores);
+
+        this.adapter = new SensoresAdapter(this,new ArrayList<String>() );
+        this.sensores.setAdapter(adapter);
+
         try {
             server = Comunicador.getIpWebService();
             URL= "http://"+server+":8080/WSR/Servicios";
@@ -76,7 +81,7 @@ public class SensoresActivity extends Activity {
         //localserver = "192.168.1.40";
         final String URL = "http://"+server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
         //final String URL = "http://" + server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
-        final String METHOD_NAME = "imagen";//mediaDatosSensores
+        final String METHOD_NAME = "mediaDatoSensores";//mediaDatosSensores
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
@@ -135,7 +140,6 @@ public class SensoresActivity extends Activity {
         {
             lista.add(e);
         }
-
-        this.sensores.setAdapter(new SensoresAdapter(this,lista));
+        adapter.setSensores(lista);
     }
 }

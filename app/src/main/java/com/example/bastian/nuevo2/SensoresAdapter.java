@@ -61,4 +61,9 @@ public class SensoresAdapter extends BaseAdapter
         distancia.setText("Distacia = "+sensor);
         return rowView;
     }
+
+    public void setSensores(List<String> sensores) {
+        this.sensores = sensores;
+        notifyDataSetChanged();
+    }
 }
