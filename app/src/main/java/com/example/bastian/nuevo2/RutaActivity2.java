@@ -73,6 +73,8 @@ public class RutaActivity2 extends Activity{
 
 
 
+
+
         botonEditarNodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
@@ -238,7 +240,6 @@ public class RutaActivity2 extends Activity{
 
         nt.start();
     }
-
 
 
 

@@ -74,6 +74,14 @@ public class ListarRutaActivity extends Activity {
         */
     }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        list = cargarRutaInterna();
+        adapterRuta.setdatos(list);
+    }
+
 
 
     public void cargado(){
@@ -318,6 +326,7 @@ public class ListarRutaActivity extends Activity {
             Comunicador.getBaseDatoRuta().eliminarRuta(list.get(resultado).getID());
             list = cargarRutaInterna();
             adapterRuta.setdatos(list);
+
 
 
 
