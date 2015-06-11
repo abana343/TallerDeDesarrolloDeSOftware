@@ -9,6 +9,7 @@ import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -32,12 +33,19 @@ public class SensoresActivity extends Activity {
 
     private ListView sensores;
     private SensoresAdapter adapter;
+    private TextView sen;
+
+
+    private ArrayList<String> listaSensores;
+    private SensoresAdapter sensoresAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensores);
         this.sensores= (ListView) findViewById(R.id.listsensores);
+        this.sen= (TextView) findViewById(R.id.textView6);
+
 
         this.adapter = new SensoresAdapter(this,new ArrayList<String>() );
         this.sensores.setAdapter(adapter);
@@ -48,6 +56,11 @@ public class SensoresActivity extends Activity {
         }catch (Exception e){}
 
         getSensores();
+        listaSensores =  new ArrayList<>();
+        sensoresAdapter = new SensoresAdapter(this,listaSensores);
+        this.sensores.setAdapter(sensoresAdapter);
+
+
     }
 
 
@@ -81,7 +94,7 @@ public class SensoresActivity extends Activity {
         //localserver = "192.168.1.40";
         final String URL = "http://"+server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
         //final String URL = "http://" + server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
-        final String METHOD_NAME = "mediaDatoSensores";//mediaDatosSensores
+        final String METHOD_NAME = "mediaDatosSensores";//mediaDatosSensores
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
@@ -96,7 +109,7 @@ public class SensoresActivity extends Activity {
 
 
                 try {
-                    while (Comunicador.getCamara()) {
+                    while (true) {
                         Thread.sleep(100);
                         try {
                             transportSE.call(SOAP_ACTION,envelope);
@@ -113,7 +126,11 @@ public class SensoresActivity extends Activity {
                             public void run() {
                                 try {
                                     String [] senso =respuesta.split("-");
+                                    sen.setText(respuesta);
                                     pintar(senso);
+                                    listaSensores = generaLista(senso);
+                                    actualizaDato();
+
                                 }
                                 catch (Exception e)
                                 {
@@ -132,6 +149,22 @@ public class SensoresActivity extends Activity {
 
         nt.start();
     }
+    private void actualizaDato(){
+        sensoresAdapter = new SensoresAdapter(this,listaSensores);
+        this.sensores.setAdapter(sensoresAdapter);
+    }
+
+
+    private ArrayList<String> generaLista(String[] sen){
+        ArrayList<String> listaSensores = new ArrayList<>();
+        for(String sensor: sen){
+            listaSensores.add(sensor);
+        }
+        return listaSensores;
+
+
+    }
+
 
     public void  pintar(String [] sen)
     {

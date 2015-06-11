@@ -48,7 +48,7 @@ public class SensoresAdapter extends BaseAdapter
             // Create a new view into the list.
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.item_rutas, parent, false);
+            rowView = inflater.inflate(R.layout.item_sensor, parent, false);
         }
 
 
