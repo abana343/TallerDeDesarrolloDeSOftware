@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -18,7 +17,6 @@ public class SensoresAdapter extends BaseAdapter
 
     private Context context;
     private List<String> sensores;
-
     public SensoresAdapter(Context context, List<String> sensores) {
         this.context = context;
         this.sensores = sensores;
@@ -26,22 +24,21 @@ public class SensoresAdapter extends BaseAdapter
     }
     @Override
     public int getCount() {
-        return 0;
+        return this.sensores.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return this.sensores.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         View rowView = convertView;
 
         if (convertView == null) {
@@ -54,10 +51,10 @@ public class SensoresAdapter extends BaseAdapter
 
         TextView nombre = (TextView) rowView.findViewById(R.id.textNameSensor);
         TextView distancia = (TextView) rowView.findViewById(R.id.TextIntSensor);
-        ImageView imagenDistacia = (ImageView) rowView.findViewById(R.id.ImageDistanciaSensor);
+       // ImageView imagenDistacia = (ImageView) rowView.findViewById(R.id.ImageDistanciaSensor);
 
         String sensor= this.sensores.get(position);
-        nombre.setText("Sensor Numero "+position);
+        nombre.setText("Sensor Número "+(position+1));
         distancia.setText("Distacia = "+sensor);
         return rowView;
     }

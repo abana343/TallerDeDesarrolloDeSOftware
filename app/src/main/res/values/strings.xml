@@ -15,6 +15,7 @@
     <string name="iprobotino">172.26.201.3</string>
     <string name="title_activity_ruta_activity2">RutaActivity2</string>
     <string name="title_activity_sensores">SensoresActivity</string>
+    <string name="sensor_no_encontrado" >Sensor no encontrado</string>
 
 
 </resources>

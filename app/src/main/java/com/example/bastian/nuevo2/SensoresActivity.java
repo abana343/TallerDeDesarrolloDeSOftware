@@ -1,15 +1,10 @@
 package com.example.bastian.nuevo2;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -20,7 +15,6 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -31,24 +25,21 @@ public class SensoresActivity extends Activity {
     private static String URL = "http://172.26.201.4:8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
     private static String server="172.26.201.4";
 
-    private ListView sensores;
+
+
+    private ListView listViewSensores;
     private SensoresAdapter adapter;
-    private TextView sen;
-
-
-    private ArrayList<String> listaSensores;
-    private SensoresAdapter sensoresAdapter;
+    private List<String> datosSensores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensores);
-        this.sensores= (ListView) findViewById(R.id.listsensores);
-        this.sen= (TextView) findViewById(R.id.textView6);
+        inicializaDatosSensores();
+        this.listViewSensores = (ListView) findViewById(R.id.listsensores);
 
-
-        this.adapter = new SensoresAdapter(this,new ArrayList<String>() );
-        this.sensores.setAdapter(adapter);
+        this.adapter = new SensoresAdapter(this,datosSensores );
+        this.listViewSensores.setAdapter(adapter);
 
         try {
             server = Comunicador.getIpWebService();
@@ -56,11 +47,14 @@ public class SensoresActivity extends Activity {
         }catch (Exception e){}
 
         getSensores();
-        listaSensores =  new ArrayList<>();
-        sensoresAdapter = new SensoresAdapter(this,listaSensores);
-        this.sensores.setAdapter(sensoresAdapter);
+    }
 
-
+    private void inicializaDatosSensores(){
+        datosSensores = new ArrayList<>();
+        for(int i = 0 ; i<9;i++){
+            datosSensores.add(getString(R.string.sensor_no_encontrado));
+        }
+        System.out.println(datosSensores);
     }
 
 
@@ -94,7 +88,7 @@ public class SensoresActivity extends Activity {
         //localserver = "192.168.1.40";
         final String URL = "http://"+server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
         //final String URL = "http://" + server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
-        final String METHOD_NAME = "mediaDatosSensores";//mediaDatosSensores
+        final String METHOD_NAME = "mediaDatoSensores";//mediaDatosSensores
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
@@ -109,7 +103,7 @@ public class SensoresActivity extends Activity {
 
 
                 try {
-                    while (true) {
+                    while (Comunicador.getCamara()) {
                         Thread.sleep(100);
                         try {
                             transportSE.call(SOAP_ACTION,envelope);
@@ -126,11 +120,7 @@ public class SensoresActivity extends Activity {
                             public void run() {
                                 try {
                                     String [] senso =respuesta.split("-");
-                                    sen.setText(respuesta);
                                     pintar(senso);
-                                    listaSensores = generaLista(senso);
-                                    actualizaDato();
-
                                 }
                                 catch (Exception e)
                                 {
@@ -149,26 +139,10 @@ public class SensoresActivity extends Activity {
 
         nt.start();
     }
-    private void actualizaDato(){
-        sensoresAdapter = new SensoresAdapter(this,listaSensores);
-        this.sensores.setAdapter(sensoresAdapter);
-    }
-
-
-    private ArrayList<String> generaLista(String[] sen){
-        ArrayList<String> listaSensores = new ArrayList<>();
-        for(String sensor: sen){
-            listaSensores.add(sensor);
-        }
-        return listaSensores;
-
-
-    }
-
 
     public void  pintar(String [] sen)
     {
-        List<String> lista= new ArrayList<String>();
+        List<String> lista= new ArrayList<>();
         for (String e:sen)
         {
             lista.add(e);
