@@ -88,7 +88,7 @@ public class SensoresActivity extends Activity {
         //localserver = "192.168.1.40";
         final String URL = "http://"+server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
         //final String URL = "http://" + server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
-        final String METHOD_NAME = "mediaDatoSensores";//mediaDatosSensores
+        final String METHOD_NAME = "mediaDatosSensores";//mediaDatosSensores
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
@@ -103,7 +103,7 @@ public class SensoresActivity extends Activity {
 
 
                 try {
-                    while (Comunicador.getCamara()) {
+                    while (true) {
                         Thread.sleep(100);
                         try {
                             transportSE.call(SOAP_ACTION,envelope);
@@ -119,7 +119,7 @@ public class SensoresActivity extends Activity {
                             @Override
                             public void run() {
                                 try {
-                                    String [] senso =respuesta.split("-");
+                                    String [] senso = respuesta.split("-");
                                     pintar(senso);
                                 }
                                 catch (Exception e)

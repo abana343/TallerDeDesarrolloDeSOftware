@@ -36,6 +36,8 @@ public class movimiento extends Activity {
 
 
     private int parar=0;
+    private boolean tomar;
+    private String foto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +107,10 @@ public class movimiento extends Activity {
         return super.onOptionsItemSelected(item);
     }
     */
-
+public void foto()
+{
+    tomar=true;
+}
     public void pedirImagen2()
     {
         //esta parte se agrego para poder pedir la imagen sin necesidad de conectar ya que toma la ip del server del edittext
@@ -148,13 +153,18 @@ public class movimiento extends Activity {
                                     byte[] decodedByte = Base64.decode(respuesta, 0);
                                     Bitmap bitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
                                     iv.setImageBitmap(bitmap);
+
+                                    //Idea principal......foto=respuesta;
+                                    if(tomar)
+                                    {
+                                        foto=respuesta;
+                                    }
                                 }
                                 catch (Exception e)
                                 {
                                     //Bitmap bitmap= BitmapFactory.decodeStream();
                                     //iv.setImageDrawable(R.id.);
                                 }
-
 
                                 //Toast.makeText(MainActivity.this,String.valueOf(contador),Toast.LENGTH_SHORT).show();
                             }
