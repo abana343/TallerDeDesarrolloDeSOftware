@@ -32,6 +32,7 @@ public class Ruta {
         this.puntos = new ArrayList<>();
         this.lista = new ArrayList<String>();
         this.nombre = "";
+        this.escala = 15;
         this.setID(-1);
     }
 
@@ -54,14 +55,20 @@ public class Ruta {
         }
     }
 
-    private String distancia(Point p1, Point p2)
+    private double distancia(Point p1, Point p2)
     {
         Double x = (((double)p1.x - p2.x)/150)*escala;
         Double y = (((double)p1.y - p2.y)/150)*escala;
-        Double distancia = new Double(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
-        return "Distancia: " + String.format("%.2f", distancia);
+        return  new Double(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
 
+    }
 
+    public double distanciaTotal(){
+        double resultadoFinal = 0;
+        for(int i = 0 ; i< puntos.size()-1; i++){
+            resultadoFinal += distancia(puntos.get(i), puntos.get(i+1));
+        }
+        return resultadoFinal;
     }
 
     public ArrayList<Point> getPuntos(){

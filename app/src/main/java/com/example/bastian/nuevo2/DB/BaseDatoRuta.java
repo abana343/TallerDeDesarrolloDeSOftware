@@ -98,6 +98,7 @@ public class BaseDatoRuta extends SQLiteOpenHelper {
                 r.setID(c.getInt(0));
                 r.setNombre(c.getString(1));
                 r.setEscala(c.getInt(2));
+                r.setPuntos(getPuntosRuta(r.getID()));
                 rutas.add(r);
 
             }while(c.moveToNext());

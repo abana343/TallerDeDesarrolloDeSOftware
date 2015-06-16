@@ -57,15 +57,15 @@ public class ListaRutaAdapter extends BaseAdapter {
         Ruta ruta = rutas.get(position);
 
 
-
         //nombre rutaActivity
         nombre.setText(ruta.nombre);
 
         //puntos rutaActivity
-        puntos.setText("Puntos: 5");
+        puntos.setText("Puntos: " + ruta.getPuntos().size());
 
         //distancia recorrida
-        distancia.setText("Distancia 23.43 mts");
+        double distanciaRecorrida = ruta.distanciaTotal();
+        distancia.setText("Distancia " + String.format("%.2f", distanciaRecorrida) + "cms");
 
         return rowView;
     }

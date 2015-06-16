@@ -62,14 +62,5 @@
             android:id="@+id/buttonEliminarRuta"
             android:onClick="deleteSelected" />
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Actualizar"
-            android:id="@+id/buttonActualizar"
-            android:layout_row="0"
-            android:layout_column="8"
-            android:onClick="onClickButtonActualizarRutas" />
     </LinearLayout>
 </LinearLayout>
