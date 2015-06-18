@@ -246,7 +246,7 @@ public class ListarRutaActivity extends Activity {
                     transportSE.call(SOAP_ACTION,envelope);
                     SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
                     respuestaWS = resultado.toString();
-                    System.out.println("dentro   " + respuestaWS);
+
                     esperandoThread = false;
 
 
@@ -287,23 +287,7 @@ public class ListarRutaActivity extends Activity {
         return rutas;
     }
 
-    public void onClickButtonActualizarRutas(View view){   ///////Arreglarr
-        /*                     DESCOMENTAR
-        obtenerRutas();
-        while(esperandoThread) {}
-        esperandoThread=true;
-        if(!respuestaWS.equals("error"))
-        {
-            list = crearRutas();
 
-            this.listViewRutas.setAdapter(new ListaRutaAdapter(this,list));
-        }
-        */
-        for(Ruta ruta:list){
-            System.out.println("nombre: "+ ruta.nombre + " escala: "+ ruta.escala + " id: " + ruta.getID());
-        }
-
-    }
 
 
     public void deleteSelected(View view) {
@@ -373,7 +357,7 @@ public class ListarRutaActivity extends Activity {
                 String puntosRuta[] = respuestaWS.split("-");
                 for (int j = 0; j < puntosRuta.length; j++) {
                     String punto[] = puntosRuta[j].split(",");
-                    System.out.println(punto[0] + "  " + punto[1]);
+
                     list.get(posicion).agregarPunto(Float.parseFloat(punto[0]), Float.parseFloat(punto[1]));
                 }
             }

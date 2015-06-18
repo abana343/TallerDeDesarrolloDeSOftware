@@ -38,6 +38,7 @@ public class RutaActivity2 extends Activity{
     private String respuestaServidor = "";
     private boolean esperandoThread = true;
     private boolean rutaEjecutada = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,8 +138,19 @@ public class RutaActivity2 extends Activity{
                 if (surfaceView.ruta.getPuntos().size() == 0) {
                     Toast.makeText(context, "Agrega puntos a la ruta", Toast.LENGTH_SHORT).show();
                 } else {
+                    esperandoThread = true;
+                    preguntaRobotEjecutando();
+                    while (esperandoThread) {
+                    }
+                    if (respuestaServidor == "si"){
+                        rutaEjecutada = true;
+                    }
+                    else
+                        rutaEjecutada = false;
+
                     button.setSelected(!button.isSelected());
-                    if (button.isSelected()) {
+
+                    if (button.isSelected() && !rutaEjecutada) {
 
 
                         String listaPuntos = "" + surfaceView.ruta.getNombre() + "-";
@@ -156,9 +168,10 @@ public class RutaActivity2 extends Activity{
                         bloquearRutaEnEjecucion();
                         esperandoThread = false;
                            */
-                        while (esperandoThread) {
-                        }
-                        Toast.makeText(context, respuestaServidor, Toast.LENGTH_SHORT).show();
+
+                            bloquearRutaEnEjecucion();
+
+                        //Toast.makeText(context, respuestaServidor, Toast.LENGTH_SHORT).show();
 
 
                     }
@@ -169,9 +182,9 @@ public class RutaActivity2 extends Activity{
                         esperandoThread = false;
                         respuestaServidor = "Ruta detenida";
                         */
-                        while (esperandoThread){
-                        }
-                        Toast.makeText(context, respuestaServidor, Toast.LENGTH_SHORT).show();
+                        //while (esperandoThread){
+                        //}
+                        //Toast.makeText(context, respuestaServidor, Toast.LENGTH_SHORT).show();
 
                     }
                 }
@@ -316,7 +329,7 @@ public class RutaActivity2 extends Activity{
             {
                 SoapObject request = new SoapObject(Comunicador.NAMESPACE,METHOD_NAME);
 
-                request.addProperty("formatoRuta",nombre);
+                request.addProperty("ruta",nombre);
                 //request.addProperty("hostnameIP","172.26.201.3");//el primer argumento es el string que identifica el web param
                 SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                 envelope.setOutputSoapObject(request);
@@ -324,7 +337,7 @@ public class RutaActivity2 extends Activity{
                 try {
                     transportSE.call(SOAP_ACTION,envelope);
                     respuestaServidor = "Ruta en ejecucion";
-                    bloquearRutaEnEjecucion();
+
                     esperandoThread = false;
                 } catch (IOException e) {
                     respuestaServidor = "Error conexion";
@@ -409,6 +422,53 @@ public class RutaActivity2 extends Activity{
         botonEditarNodo.setClickable(true);
         botonEliminarNodo.setClickable(true);
         rutaEjecutada = false;
+    }
+
+
+    private void preguntaRobotEjecutando(){
+        String server = Comunicador.getIpWebService();
+
+        final String URL = "http://" + server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
+        final String METHOD_NAME = "ejecutandoRuta";
+        final String SOAP_ACTION = Comunicador.NAMESPACE + METHOD_NAME;
+
+        Thread nt = new Thread()
+        {
+            String respuesta = "Coneccion Fallida";
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(Comunicador.NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuesta = resultado.toString();
+                    respuestaServidor = resultado.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    respuestaServidor = "no";
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                    respuestaServidor = "no";
+                }
+                esperandoThread = false;
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        nt.start();
+
+
+
     }
 
 }
