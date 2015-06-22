@@ -37,9 +37,19 @@
         android:onClick="gderecha" />
 
     <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="326dp"
+        android:layout_width="313dp"
+        android:layout_height="290dp"
         android:id="@+id/camara"
         android:layout_gravity="center_horizontal|top" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Foto"
+        android:id="@+id/button"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="70dp"
+        android:onClick="foto" />
 
 </FrameLayout>
