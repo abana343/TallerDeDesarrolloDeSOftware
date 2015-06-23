@@ -1,6 +1,8 @@
 package com.example.bastian.nuevo2;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +32,8 @@ public class SensoresActivity extends Activity {
     private ListView listViewSensores;
     private SensoresAdapter adapter;
     private List<String> datosSensores;
+    private SensorSurfaceView surfaceViewSensor;
+    private Bitmap imagenRobot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +44,15 @@ public class SensoresActivity extends Activity {
 
         this.adapter = new SensoresAdapter(this,datosSensores );
         this.listViewSensores.setAdapter(adapter);
-
+        surfaceViewSensor = (SensorSurfaceView) findViewById(R.id.surfaceViewSensor);
         try {
             server = Comunicador.getIpWebService();
             URL= "http://"+server+":8080/WSR/Servicios";
         }catch (Exception e){}
 
+        imagenRobot = BitmapFactory.decodeResource(getResources(), R.drawable.robot_sensores);
+        surfaceViewSensor.setImagenRobot(imagenRobot);
+        surfaceViewSensor.setSensores(datosSensores);
         getSensores();
     }
 
@@ -54,7 +61,7 @@ public class SensoresActivity extends Activity {
         for(int i = 0 ; i<9;i++){
             datosSensores.add(getString(R.string.sensor_no_encontrado));
         }
-        System.out.println(datosSensores);
+
     }
 
 
@@ -148,5 +155,6 @@ public class SensoresActivity extends Activity {
             lista.add(e);
         }
         adapter.setSensores(lista);
+        surfaceViewSensor.setSensores(lista);
     }
 }

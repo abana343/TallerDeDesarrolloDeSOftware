@@ -26,6 +26,16 @@ class Comunicador {
     private static String[] sensores;
 
 
+    private static boolean ESTADO_SERVICIO = false;//defecto   false
+
+    public static boolean isESTADO_SERVICIO() {
+        return ESTADO_SERVICIO;
+    }
+
+    public static void setESTADO_SERVICIO(boolean ESTADO_SERVICIO) {
+        Comunicador.ESTADO_SERVICIO = ESTADO_SERVICIO;
+    }
+
     public static String getIpRobotino() {
         return IpRobotino;
     }

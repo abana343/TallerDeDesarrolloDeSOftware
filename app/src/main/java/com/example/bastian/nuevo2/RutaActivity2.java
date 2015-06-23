@@ -138,58 +138,53 @@ public class RutaActivity2 extends Activity{
                 if (surfaceView.ruta.getPuntos().size() == 0) {
                     Toast.makeText(context, "Agrega puntos a la ruta", Toast.LENGTH_SHORT).show();
                 } else {
-                    esperandoThread = true;
-                    preguntaRobotEjecutando();
-                    while (esperandoThread) {
-                    }
-                    if (respuestaServidor == "si"){
-                        rutaEjecutada = true;
-                    }
-                    else
-                        rutaEjecutada = false;
-
-                    button.setSelected(!button.isSelected());
-
-                    if (button.isSelected() && !rutaEjecutada) {
-
-
-                        String listaPuntos = "" + surfaceView.ruta.getNombre() + "-";
-                        for (int i = 0; i < surfaceView.ruta.getPuntos().size(); i++) {
-                            listaPuntos += "(" + surfaceView.ruta.getPuntos().get(i).x + "," + surfaceView.ruta.getPuntos().get(i).y + ")-";
-                        }
-                        EditText escalaText = (EditText) findViewById(R.id.escala);
-                        int escala = Integer.parseInt(escalaText.getText().toString()) * 10;
-                        listaPuntos += Integer.toString(escala);
-
+                    if(Comunicador.isESTADO_SERVICIO()){
                         esperandoThread = true;
-                        ejecutaRuta(listaPuntos);
-                        /*           Prueba
-                        respuestaServidor = "Ruta en ejecucion";
-                        bloquearRutaEnEjecucion();
-                        esperandoThread = false;
-                           */
+                        preguntaRobotEjecutando();
+                        while (esperandoThread) {
+                        }
+                        if (respuestaServidor == "si"){
+                            rutaEjecutada = true;
+                        }
+                        else
+                            rutaEjecutada = false;
 
+                        button.setSelected(!button.isSelected());
+
+                        if (button.isSelected() && !rutaEjecutada) {
+
+
+                            String listaPuntos = "" + surfaceView.ruta.getNombre() + "-";
+                            for (int i = 0; i < surfaceView.ruta.getPuntos().size(); i++) {
+                                listaPuntos += "(" + surfaceView.ruta.getPuntos().get(i).x + "," + surfaceView.ruta.getPuntos().get(i).y + ")-";
+                            }
+                            EditText escalaText = (EditText) findViewById(R.id.escala);
+                            int escala = Integer.parseInt(escalaText.getText().toString()) * 10;
+                            listaPuntos += Integer.toString(escala);
+
+                            esperandoThread = true;
+                            ejecutaRuta(listaPuntos);
                             bloquearRutaEnEjecucion();
 
-                        //Toast.makeText(context, respuestaServidor, Toast.LENGTH_SHORT).show();
 
 
+                            ToggleButton toggleButton = (ToggleButton) findViewById(R.id.buttonRun);
+                            toggleButton.setChecked(true);
+                        }
+                        else{
+                            cancelarEjecucion();
+                            ToggleButton toggleButton = (ToggleButton) findViewById(R.id.buttonRun);
+                            toggleButton.setChecked(false);
+
+                        }
                     }
                     else{
-                        cancelarEjecucion();
-                        /*    PRUEBAAA
-                        terminarEjecucion();
-                        esperandoThread = false;
-                        respuestaServidor = "Ruta detenida";
-                        */
-                        //while (esperandoThread){
-                        //}
-                        //Toast.makeText(context, respuestaServidor, Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(context, "Comprueba la coneccion", Toast.LENGTH_SHORT).show();
+                        ToggleButton toggleButton = (ToggleButton) findViewById(R.id.buttonRun);
+                        toggleButton.setChecked(!toggleButton.isChecked());
                     }
+
                 }
-
-
             }
         });
 
@@ -364,38 +359,38 @@ public class RutaActivity2 extends Activity{
         final String METHOD_NAME = "abortarEjecucionRuta";
         final String SOAP_ACTION = Comunicador.NAMESPACE + METHOD_NAME;
 
-            Thread nt = new Thread()
+        Thread nt = new Thread()
+        {
+            String respuesta = "Coneccion Fallida";
+            @Override
+            public void run()
             {
-                String respuesta = "Coneccion Fallida";
-                @Override
-                public void run()
-                {
-                    SoapObject request = new SoapObject(Comunicador.NAMESPACE,METHOD_NAME);
-                    SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-                    envelope.setOutputSoapObject(request);
-                    HttpTransportSE transportSE = new HttpTransportSE(URL);
-                    try {
-                        transportSE.call(SOAP_ACTION,envelope);
-                        SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
-                        respuesta = resultado.toString();
-                        terminarEjecucion();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (XmlPullParserException e) {
-                        e.printStackTrace();
-                    }
-                    esperandoThread = false;
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
-                        }
-                    });
+                SoapObject request = new SoapObject(Comunicador.NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuesta = resultado.toString();
+                    terminarEjecucion();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
                 }
-            };
+                esperandoThread = false;
 
-            nt.start();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        nt.start();
 
     }
 

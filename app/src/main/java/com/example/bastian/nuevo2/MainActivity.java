@@ -100,6 +100,10 @@ public class MainActivity extends Activity {
                     transportSE.call(SOAP_ACTION,envelope);
                     SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
                     respuesta = resultado.toString();
+                    if(respuesta.equals("conectado"))
+                        Comunicador.setESTADO_SERVICIO(true);
+                    else
+                        Comunicador.setESTADO_SERVICIO(false);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (XmlPullParserException e) {
