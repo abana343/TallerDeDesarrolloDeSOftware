@@ -62,6 +62,20 @@ public class SensoresActivity extends Activity {
             datosSensores.add(getString(R.string.sensor_no_encontrado));
         }
 
+
+        /* datos prueba
+        datosSensores = new ArrayList<>();
+            datosSensores.add("3.2323");
+            datosSensores.add("2.4");
+            datosSensores.add("2.2212");
+            datosSensores.add("2.012");
+            datosSensores.add("1.8");
+            datosSensores.add("1.51");
+            datosSensores.add("1.2232");
+            datosSensores.add("0.8");
+            datosSensores.add("0.4");
+         */
+
     }
 
 
@@ -153,8 +167,11 @@ public class SensoresActivity extends Activity {
         for (String e:sen)
         {
             lista.add(e);
+
         }
         adapter.setSensores(lista);
         surfaceViewSensor.setSensores(lista);
     }
+
+
 }

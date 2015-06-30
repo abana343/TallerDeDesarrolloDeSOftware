@@ -55,7 +55,29 @@ public class SensoresAdapter extends BaseAdapter
 
         String sensor= this.sensores.get(position);
         nombre.setText("Sensor Número "+(position+1));
-        distancia.setText("Distacia = "+sensor);
+        String dato = "";
+        if(sensor.equals("Sensor no encontrado")){
+            distancia.setText("Sensor no encontrado");
+        }
+        else {
+
+
+            float valor = Float.parseFloat(sensor);
+            if (valor > 2.5)
+                dato = "0";
+            else if (valor < 0.5)
+                dato = "libre";
+            else {
+                valor = (float) 12.5 - (5 * valor);
+                dato = String.format("%.2f", valor);
+            }
+            if (dato.equals("libre")) {
+                distancia.setText("Sensor sin detectar objeto");
+            } else {
+                distancia.setText("Distacia aproximada: " + dato + "cms");
+            }
+        }
+
         return rowView;
     }
 

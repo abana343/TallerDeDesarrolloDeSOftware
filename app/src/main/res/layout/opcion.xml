@@ -10,6 +10,7 @@
 
     //Titulo del layout
     <TextView
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -27,6 +28,7 @@
 
         //texto de robotino
         <TextView
+            style="@style/TextViewStyle"
             android:id="@+id/textRobotino"
             android:text="IP Robotino"
             android:layout_width="wrap_content"

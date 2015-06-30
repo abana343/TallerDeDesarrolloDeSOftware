@@ -18,7 +18,7 @@
         android:id="@+id/label"
         android:layout_width="229dp"
         android:layout_height="match_parent"
-        android:text="Dustancia  trallecto"
+        android:text="Distancia  trallecto"
         android:textSize="50px"
         android:gravity="center_vertical|center_horizontal">
     </TextView>

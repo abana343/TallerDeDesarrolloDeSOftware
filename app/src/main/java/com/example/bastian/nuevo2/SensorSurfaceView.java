@@ -37,8 +37,9 @@ public class SensorSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
 
 
-
     }
+
+
 
 
     @Override
@@ -54,7 +55,7 @@ public class SensorSurfaceView extends SurfaceView implements SurfaceHolder.Call
         this.height = height;
         System.out.println("width  " + width + "  height:  " + height);
         // Read your drawable from somewhere
-        Drawable dr = getResources().getDrawable(R.drawable.robot_sensores);
+        Drawable dr = getResources().getDrawable(R.drawable.robot_sensores2);
         Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
 // Scale it to 50 x 50
         Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, width, height, true));
@@ -95,7 +96,7 @@ public class SensorSurfaceView extends SurfaceView implements SurfaceHolder.Call
                     for(int i = 0 ; i< sensores.size();i++){
                         float valor = Float.parseFloat(sensores.get(i));
                         Paint paint = new Paint();
-                        if (valor <= 1){
+                        if (valor <= 0.5){
                             paint.setColor(Color.GREEN);
                         }
                         else if(valor <=2){
@@ -104,7 +105,11 @@ public class SensorSurfaceView extends SurfaceView implements SurfaceHolder.Call
                         else{
                             paint.setColor(Color.RED);
                         }
+
                         canvas.drawCircle(puntos.get(i).x,puntos.get(i).y,40,paint);
+                        paint.setTextSize(50);
+                        paint.setColor(Color.BLACK);
+                        canvas.drawText(""+(i+1),puntos.get(i).x-10,puntos.get(i).y+10,paint);
                     }
 
                 }
@@ -120,6 +125,7 @@ public class SensorSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     private void generaPuntos(){
         puntos = new ArrayList<>();
+        /*
         puntos.add(new Point(6*width/11,height-(int)(height*0.1)));
 
         puntos.add(new Point(4*width/5,height-(int)(height*0.2)));
@@ -131,11 +137,23 @@ public class SensorSurfaceView extends SurfaceView implements SurfaceHolder.Call
         puntos.add(new Point(1*width/9,height-(int)(height*0.6)));
         puntos.add(new Point(1*width/9,height-(int)(height*0.4)));
         puntos.add(new Point(1*width/5,height-(int)(height*0.2)));
+        */
+        puntos.add(new Point(515,675));
+
+        puntos.add(new Point(760,580));
+        puntos.add(new Point(850,435));
+        puntos.add(new Point(874,280));
+        puntos.add(new Point(715,85));
+
+        puntos.add(new Point(280,85));
+        puntos.add(new Point(109,280));
+        puntos.add(new Point(130,435));
+        puntos.add(new Point(210,580));
+        System.out.println("width " + width + "   hei  " + height );
     }
 
     public void setSensores(List lista){
         sensores = lista;
-
 
     }
 
