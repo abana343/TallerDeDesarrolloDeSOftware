@@ -9,12 +9,12 @@
     <string name="action_galeria">galeria</string>
     <string name="action_rutas">rutas</string>
     <string name="title_activity_ruta">RutaActivity</string>
-    <string name="title_activity_movimiento">movimiento</string>
-    <string name="title_activity_listar_ruta">ListarRutaActivity</string>
+    <string name="title_activity_movimiento">Segurito</string>
+    <string name="title_activity_listar_ruta">Segurito</string>
     <string name="ipwebservice">172.26.201.4</string>
     <string name="iprobotino">172.26.201.3</string>
-    <string name="title_activity_ruta_activity2">RutaActivity2</string>
-    <string name="title_activity_sensores">SensoresActivity</string>
+    <string name="title_activity_ruta_activity2">Segurito</string>
+    <string name="title_activity_sensores">Segurito</string>
     <string name="sensor_no_encontrado" >Sensor no encontrado</string>
 
 
