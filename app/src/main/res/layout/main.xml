@@ -57,7 +57,8 @@
             android:layout_column="1"
             android:layout_gravity="top|left"
             android:layout_width="120dp"
-            android:layout_marginLeft="20dp" />
+            android:layout_marginLeft="20dp"
+            android:onClick="onClickButtonIrGaleria" />
 
         <ImageButton
             android:layout_width="120dp"

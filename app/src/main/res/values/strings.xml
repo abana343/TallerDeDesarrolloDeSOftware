@@ -16,6 +16,7 @@
     <string name="title_activity_ruta_activity2">Segurito</string>
     <string name="title_activity_sensores">Segurito</string>
     <string name="sensor_no_encontrado" >Sensor no encontrado</string>
+    <string name="title_activity_galeria">GaleriaActivity</string>
 
 
 </resources>

@@ -10,6 +10,7 @@
         android:allowBackup="true"
         android:icon="@drawable/robotinot"
         android:label="@string/app_name"
+
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
@@ -39,6 +40,10 @@
         <activity
             android:name=".SensoresActivity"
             android:label="@string/title_activity_sensores" >
+        </activity>
+        <activity
+            android:name=".GaleriaActivity"
+            android:label="@string/title_activity_galeria" >
         </activity>
     </application>
 
