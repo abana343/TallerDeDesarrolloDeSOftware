@@ -1,12 +1,15 @@
 package com.example.bastian.nuevo2;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -34,6 +37,7 @@ public class SensoresActivity extends Activity {
     private List<String> datosSensores;
     private SensorSurfaceView surfaceViewSensor;
     private Bitmap imagenRobot;
+    boolean iteracion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +107,7 @@ public class SensoresActivity extends Activity {
 
     public void getSensores()
     {
+        final boolean iteracion= true;
         //esta parte se agrego para poder pedir la imagen sin necesidad de conectar ya que toma la ip del server del edittext
         //EditText editTextServer = (EditText) findViewById(R.id.editTextIpServer);
         // String localserver = editTextServer.getText().toString();//192.168.56.1
@@ -124,7 +129,7 @@ public class SensoresActivity extends Activity {
 
 
                 try {
-                    while (true) {
+                    while (iteracion) {
                         Thread.sleep(100);
                         try {
                             transportSE.call(SOAP_ACTION,envelope);
@@ -171,6 +176,17 @@ public class SensoresActivity extends Activity {
         }
         adapter.setSensores(lista);
         surfaceViewSensor.setSensores(lista);
+    }
+
+    /*
+    Detiene la obtencion de los sensores cuando sale de la pantalla.
+     */
+    @Override
+    public void onBackPressed()
+    {
+        //Toast.makeText(SensoresActivity.this,"Detenido", Toast.LENGTH_SHORT).show();
+        iteracion=false;
+        SensoresActivity.super.onBackPressed();
     }
 
 
