@@ -68,7 +68,9 @@ public class SensoresAdapter extends BaseAdapter
             else if (valor < 0.5)
                 dato = "libre";
             else {
-                valor = (float) 12.5 - (5 * valor);
+                //valor = (float) 12.5 - (5 * valor);
+                float n = (float) Math.pow(valor,(float)-0.911);
+                valor =  (float) 12.482 * n;
                 dato = String.format("%.2f", valor);
             }
             if (dato.equals("libre")) {
