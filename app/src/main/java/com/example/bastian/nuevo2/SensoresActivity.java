@@ -107,7 +107,7 @@ public class SensoresActivity extends Activity {
 
     public void getSensores()
     {
-        final boolean iteracion= true;
+        iteracion= true;
         //esta parte se agrego para poder pedir la imagen sin necesidad de conectar ya que toma la ip del server del edittext
         //EditText editTextServer = (EditText) findViewById(R.id.editTextIpServer);
         // String localserver = editTextServer.getText().toString();//192.168.56.1
