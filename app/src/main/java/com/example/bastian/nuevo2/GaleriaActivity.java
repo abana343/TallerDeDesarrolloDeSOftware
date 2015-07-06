@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -25,6 +26,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class GaleriaActivity extends Activity {
 
@@ -43,38 +45,44 @@ public class GaleriaActivity extends Activity {
     private ArrayList<String> fotos;
 
     private TextView texto ;
+
+    private List<String> myList;
+    private List<Bitmap> imagenes;
+
     /** Este mŽtodo es llamado cuando la actividad es creada */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_galeria);
 
-        name = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test.jpg";
 
-        texto= (TextView) findViewById(R.id.textView7);
-        Button btnAction = (Button)findViewById(R.id.btnPic);
-        btnAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Intent intent =new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                int code = SELECT_PICTURE;
-                /**
-                 * Luego, con todo preparado iniciamos la actividad correspondiente.
-                 */
-                startActivityForResult(intent, code);
-            }
-        });
 
-        Button btnEliminar = (Button)findViewById(R.id.btnEliminar);
-        btnEliminar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        myList = new ArrayList<String>();
+        imagenes= new ArrayList<Bitmap>();
+        File filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        String root_sd = Environment.getExternalStorageDirectory().toString();
+        File file = new File(filepath.getAbsolutePath()+"/Robotino");
+        File list[] = file.listFiles();
 
-                File archivo= new File(name);
-                archivo.delete();
-            }
-        });
+        File imag;
+        BitmapFactory.Options bit;
+        Bitmap bit2;
+        for( int i=0; i< list.length; i++)
+        {
+            imag= null;
+            imag= new File(filepath.getAbsolutePath()+"/Robotino",list[i].getName());
+            bit = new BitmapFactory.Options();
+            bit2 = BitmapFactory.decodeFile(imag.getAbsolutePath(),bit);
+            bit2 = Bitmap.createScaledBitmap(bit2, 20, 20, true);
+            imagenes.add(bit2);
+            myList.add( filepath.getAbsolutePath()+"/Robotino/"+list[i].getName() );
+
+            Log.e("archivo = ", "" + myList.get(i));
+        }
+
 
     }
 
