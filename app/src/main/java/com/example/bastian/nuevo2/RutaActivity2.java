@@ -36,6 +36,7 @@ public class RutaActivity2 extends Activity{
 
     final Context context = this;
     private String respuestaServidor = "";
+    private String ejecucionRuta= "";
     private boolean esperandoThread = true;
     private boolean rutaEjecutada = false;
 
@@ -331,23 +332,39 @@ public class RutaActivity2 extends Activity{
                 HttpTransportSE transportSE = new HttpTransportSE(URL);
                 try {
                     transportSE.call(SOAP_ACTION,envelope);
-                    respuestaServidor = "Ruta en ejecucion";
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    ejecucionRuta = resultado.toString();
+                    respuestaServidor = "Ruta terminada";
 
                     esperandoThread = false;
+
+
                 } catch (IOException e) {
                     respuestaServidor = "Error conexion";
                     esperandoThread = false;
                     e.printStackTrace();
+
                 } catch (XmlPullParserException e) {
                     respuestaServidor = "Error conexion";
                     esperandoThread = false;
                     e.printStackTrace();
                 }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(ejecucionRuta.equals("ruta ejecutada")) {
+                            terminarEjecucion();
+                            botonEjecutar.setChecked(false);
+                        }
+                    }
+                });
             }
 
-        };
 
+        };
         nt.start();
+
     }
 
 
@@ -457,6 +474,7 @@ public class RutaActivity2 extends Activity{
                         //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
                     }
                 });
+
             }
         };
 

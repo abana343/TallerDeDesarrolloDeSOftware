@@ -132,13 +132,13 @@
         <ImageButton
             android:id="@+id/buttonGuardarRuta"
             android:src="@drawable/save"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:onClick="onClickButtonGuardarRuta2"
             android:background="@android:color/transparent"
-            android:layout_width="50dip"
-            android:layout_height="50dip"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
 
 
