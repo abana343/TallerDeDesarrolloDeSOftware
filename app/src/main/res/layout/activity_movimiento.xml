@@ -42,14 +42,16 @@
         android:id="@+id/camara"
         android:layout_gravity="center_horizontal|top" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Foto"
-        android:id="@+id/button"
-        android:layout_gravity="left|center_vertical"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="70dp"
-        android:onClick="foto" />
+    <ImageButton
+        android:layout_width="57dp"
+        android:layout_height="57dp"
+        android:id="@+id/imageButton5"
+        android:layout_gravity="center"
+        android:src="@drawable/camara"
+        android:layout_marginTop="65dp"
+        android:onClick="foto"
+        android:background="@drawable/btn_circle"
+        android:adjustViewBounds="false"
+        android:scaleType="centerCrop" />
 
 </FrameLayout>

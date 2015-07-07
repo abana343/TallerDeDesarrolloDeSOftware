@@ -130,5 +130,16 @@
             android:layout_height="277dp"
             android:id="@+id/camara1"
             android:layout_gravity="center_horizontal|top" />
+
+        <ImageButton
+            android:layout_width="73dp"
+            android:layout_height="73dp"
+            android:id="@+id/imageButton6"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginTop="60dp"
+            android:src="@drawable/camara"
+            android:onClick="foto"
+            android:background="@drawable/btn_circle"
+            android:scaleType="center" />
     </FrameLayout>
 </LinearLayout>
