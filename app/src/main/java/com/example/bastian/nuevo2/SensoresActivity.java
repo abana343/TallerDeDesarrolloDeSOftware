@@ -27,7 +27,7 @@ public class SensoresActivity extends Activity {
 
 
     private static final String NAMESPACE = "http://services.ws.rws/";
-    private static String URL = "http://172.26.201.4:8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
+    private static String URL = "http://172.26.201.4:"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
     private static String server="172.26.201.4";
 
 
@@ -51,7 +51,7 @@ public class SensoresActivity extends Activity {
         surfaceViewSensor = (SensorSurfaceView) findViewById(R.id.surfaceViewSensor);
         try {
             server = Comunicador.getIpWebService();
-            URL= "http://"+server+":8080/WSR/Servicios";
+            URL= "http://"+server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";
         }catch (Exception e){}
 
         imagenRobot = BitmapFactory.decodeResource(getResources(), R.drawable.robot_sensores);
@@ -112,7 +112,7 @@ public class SensoresActivity extends Activity {
         //EditText editTextServer = (EditText) findViewById(R.id.editTextIpServer);
         // String localserver = editTextServer.getText().toString();//192.168.56.1
         //localserver = "192.168.1.40";
-        final String URL = "http://"+server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
+        final String URL = "http://"+server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
         //final String URL = "http://" + server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
         final String METHOD_NAME = "mediaDatosSensores";//mediaDatosSensores
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;

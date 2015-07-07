@@ -184,7 +184,7 @@ public class ListarRutaActivity extends Activity {
     {
         String server = Comunicador.getIpWebService();
 
-        final String URL = "http://" + server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
+        final String URL = "http://" + server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
         final String METHOD_NAME = "obtenerRutas";
         final String SOAP_ACTION = Comunicador.NAMESPACE + METHOD_NAME;
 
@@ -226,7 +226,7 @@ public class ListarRutaActivity extends Activity {
     {
         String server = Comunicador.getIpWebService();
 
-        final String URL = "http://" + server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
+        final String URL = "http://" + server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
         final String METHOD_NAME = "pasosRuta";
         final String SOAP_ACTION = Comunicador.NAMESPACE + METHOD_NAME;
 
