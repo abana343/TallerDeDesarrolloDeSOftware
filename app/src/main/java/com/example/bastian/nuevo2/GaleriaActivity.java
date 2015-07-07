@@ -1,53 +1,36 @@
 package com.example.bastian.nuevo2;
 
 
-import android.app.Activity;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
-import android.media.MediaScannerConnection.MediaScannerConnectionClient;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.Gallery;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GaleriaActivity extends Activity {
+public class GaleriaActivity extends FragmentActivity {
 
-    /**
-     * Constantes para identificar la acci—n realizada (tomar una fotograf’a
-     * o bien seleccionarla de la galer’a)
-     */
-    private static int TAKE_PICTURE = 1;
-    private static int SELECT_PICTURE = 2;
-
-    /**
-     * Variable que define el nombre para el archivo donde escribiremos
-     * la fotograf’a de tama–o completo al tomarla.
-     */
-    private String name = "";
-    private ArrayList<String> fotos;
-
-    private TextView texto ;
-
+    DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
+    ViewPager mViewPager;
     private List<String> myList;
-    private List<Bitmap> imagenes;
+    private static List<Bitmap> imagenes;
 
     /** Este mŽtodo es llamado cuando la actividad es creada */
     @Override
@@ -56,8 +39,6 @@ public class GaleriaActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_galeria);
-
-
 
 
         myList = new ArrayList<String>();
@@ -76,7 +57,7 @@ public class GaleriaActivity extends Activity {
             imag= new File(filepath.getAbsolutePath()+"/Robotino",list[i].getName());
             bit = new BitmapFactory.Options();
             bit2 = BitmapFactory.decodeFile(imag.getAbsolutePath(),bit);
-            bit2 = Bitmap.createScaledBitmap(bit2, 20, 20, true);
+            bit2 = Bitmap.createScaledBitmap(bit2, 200, 200, true);
             imagenes.add(bit2);
             myList.add( filepath.getAbsolutePath()+"/Robotino/"+list[i].getName() );
 
@@ -84,70 +65,68 @@ public class GaleriaActivity extends Activity {
         }
 
 
+
+
+        mDemoCollectionPagerAdapter =
+                new DemoCollectionPagerAdapter(
+                        getSupportFragmentManager());
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mDemoCollectionPagerAdapter);
+
     }
 
-    /**
-     * Funci—n que se ejecuta cuando concluye el intent en el que se solicita una imagen
-     * ya sea de la c‡mara o de la galer’a
-     */
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        /**
-         * Se revisa si la imagen viene de la c‡mara (TAKE_PICTURE) o de la galer’a (SELECT_PICTURE)
+
+    public class DemoCollectionPagerAdapter extends FragmentStatePagerAdapter {
+        public DemoCollectionPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            Fragment fragment = new DemoObjectFragment();
+            Bundle args = new Bundle();
+
+            // Our object is just an integer :-P
+            args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
+            fragment.setArguments(args);
+
+            return fragment;
+        }
+
+        /*
+        Cantidad de objetos en la lista
          */
-        if (requestCode == TAKE_PICTURE) {
-            /**
-             * Si se reciben datos en el intent tenemos una vista previa (thumbnail)
-             */
-            if (data != null) {
-                /**
-                 * En el caso de una vista previa, obtenemos el extra ÒdataÓ del intent y
-                 * lo mostramos en el ImageView
-                 */
-                if (data.hasExtra("data")) {
-                    ImageView iv = (ImageView)findViewById(R.id.imgView);
-                    iv.setImageBitmap((Bitmap) data.getParcelableExtra("data"));
-                }
-                /**
-                 * De lo contrario es una imagen completa
-                 */
-            } else {
-                /**
-                 * A partir del nombre del archivo ya definido lo buscamos y creamos el bitmap
-                 * para el ImageView
-                 */
-                ImageView iv = (ImageView)findViewById(R.id.imgView);
-                iv.setImageBitmap(BitmapFactory.decodeFile(name));
-                /**
-                 * Para guardar la imagen en la galer’a, utilizamos una conexi—n a un MediaScanner
-                 */
-                new MediaScannerConnectionClient() {
-                    private MediaScannerConnection msc = null; {
-                        msc = new MediaScannerConnection(getApplicationContext(), this);
-                        msc.connect();
-                    }
-                    public void onMediaScannerConnected() {
-                        msc.scanFile(name, null);
-                    }
-                    public void onScanCompleted(String path, Uri uri) {
-                        msc.disconnect();
-                    }
-                };
-            }
-            /**
-             * Recibimos el URI de la imagen y construimos un Bitmap a partir de un stream de Bytes
-             */
-        } else if (requestCode == SELECT_PICTURE){
-            Uri selectedImage = data.getData();
-            InputStream is;
-            try {
-                is = getContentResolver().openInputStream(selectedImage);
-                BufferedInputStream bis = new BufferedInputStream(is);
-                Bitmap bitmap = BitmapFactory.decodeStream(bis);
-                ImageView iv = (ImageView)findViewById(R.id.imgView);
-                iv.setImageBitmap(bitmap);
-              //  name= selectedImage.getPath();
-              //  texto.setText(selectedImage.getPath());
-            } catch (FileNotFoundException e) {}
+        @Override
+        public int getCount() {
+            return imagenes.size()-1;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "OBJECT " + (position + 1);
+        }
+    }
+
+    public static class DemoObjectFragment extends Fragment {
+        public static final String ARG_OBJECT = "object";
+        //public static List<Bitmap> imagenes;
+        @Override
+        public View onCreateView(LayoutInflater inflater,
+                                 ViewGroup container, Bundle savedInstanceState) {
+            // The last two arguments ensure LayoutParams are inflated
+            // properly.
+            //imagenes=;
+            View rootView = inflater.inflate(
+                    R.layout.item_collection, container, false);
+            Bundle args = getArguments();
+            ((ImageView) rootView.findViewById(android.R.id.text1)).setImageBitmap(
+                    imagenes.get(args.getInt(ARG_OBJECT)));
+            return rootView;
+        }
+
+        public static void setImagenes(List<Bitmap> img)
+        {
+            imagenes= img;
         }
     }
 }
