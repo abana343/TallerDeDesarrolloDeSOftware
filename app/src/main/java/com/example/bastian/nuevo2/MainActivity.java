@@ -47,6 +47,10 @@ public class MainActivity extends Activity {
 
         EditText editTextrobot = (EditText) findViewById(R.id.IpRobotino);
         editTextrobot.setText(R.string.iprobotino);
+
+        EditText editTextPuertoWS = (EditText) findViewById(R.id.PuertoWS);
+        editTextPuertoWS.setText(Comunicador.getPUERTO());
+
         baseDato = new BaseDatoRuta(this);
         Comunicador.setBaseDatoRuta(baseDato);
     }
@@ -75,11 +79,13 @@ public class MainActivity extends Activity {
 
     public void conectarServidor(View view)
     {
+        EditText editTextPuertoWS = (EditText) findViewById(R.id.PuertoWS);
+        Comunicador.setPUERTO(editTextPuertoWS.getText().toString());
         EditText editTextServer = (EditText) findViewById(R.id.IpWebservice);
         server = editTextServer.getText().toString();//192.168.56.1
         TextView tv = (TextView) findViewById(R.id.RB);
         tv.setText(server);
-        final String URL = "http://" + server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
+        final String URL = "http://" + server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
         final String METHOD_NAME = "conectar";
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()

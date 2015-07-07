@@ -19,6 +19,15 @@ class Comunicador {
     private static String IpWebService = "172.17.50.211";
     private static String IpRobotino = "172.26.201.3";
     public static final String NAMESPACE = "http://services.ws.rws/";
+    public static String PUERTO = "8080";
+
+    public static String getPUERTO() {
+        return PUERTO;
+    }
+
+    public static void setPUERTO(String PUERTO) {
+        Comunicador.PUERTO = PUERTO;
+    }
 
     public static boolean camara;
     private static int movimiento;
