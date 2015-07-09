@@ -46,8 +46,7 @@
             android:hint="Ingrese IP robotino"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="30px"
-            android:gravity="center"
-            android:inputType="number"/>
+            android:gravity="center"/>
         </LinearLayout>
 
     //segunda parte de IP
@@ -76,8 +75,7 @@
             android:hint="Ingrese IP Webservice"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="30px"
-            android:gravity="center"
-            android:inputType="number"/>
+            android:gravity="center"/>
     </LinearLayout>
 
 

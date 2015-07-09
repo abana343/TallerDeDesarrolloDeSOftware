@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/action_conectar"
-        android:id="@+id/RB"
+        android:id="@+id/estado_coneccion"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
@@ -34,10 +34,10 @@
         android:onClick="conectarServidor" />
 
     <TextView
-        android:id="@+id/estado_coneccion"
+        android:id="@+id/RB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Desconectado"
+        android:text="IP"
         android:layout_gravity="center_horizontal" />
 
     <GridLayout

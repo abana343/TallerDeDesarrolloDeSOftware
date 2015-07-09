@@ -3,6 +3,7 @@ package com.example.bastian.nuevo2;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -60,6 +61,7 @@ public class SensoresActivity extends Activity {
         getSensores();
     }
 
+
     private void inicializaDatosSensores(){
         datosSensores = new ArrayList<>();
         for(int i = 0 ; i<9;i++){
@@ -86,7 +88,7 @@ public class SensoresActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_sensores, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -98,10 +100,36 @@ public class SensoresActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        /*
+        if (id == R.id.action_conectar) {
+            return true;
+        }
+        */
+        if (id == R.id.action_inicio) {
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_galeria) {
+            Intent i = new Intent(this, GaleriaActivity.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_rutas) {
+            Intent i = new Intent(this, ListarRutaActivity.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_movimiento) {
+            Intent i = new Intent(this, movimiento.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_sensores) {
+            Intent i = new Intent(this, SensoresActivity.class);
+            startActivity(i);
+        }
+        /*
         if (id == R.id.action_settings) {
             return true;
         }
-
+        */
         return super.onOptionsItemSelected(item);
     }
 
@@ -165,6 +193,8 @@ public class SensoresActivity extends Activity {
 
         nt.start();
     }
+
+
 
     public void  pintar(String [] sen)
     {

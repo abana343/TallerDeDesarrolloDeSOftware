@@ -37,7 +37,7 @@
         android:onClick="gderecha" />
 
     <ImageView
-        android:layout_width="313dp"
+        android:layout_width="355dp"
         android:layout_height="290dp"
         android:id="@+id/camara"
         android:layout_gravity="center_horizontal|top" />
@@ -46,7 +46,7 @@
         android:layout_width="57dp"
         android:layout_height="57dp"
         android:id="@+id/imageButton5"
-        android:layout_gravity="center"
+        android:layout_gravity="left|center_vertical"
         android:src="@drawable/camara"
         android:layout_marginTop="65dp"
         android:onClick="foto"

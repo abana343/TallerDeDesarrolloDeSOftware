@@ -71,9 +71,36 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        /*
+        if (id == R.id.action_conectar) {
+            return true;
+        }
+        */
+        if (id == R.id.action_inicio) {
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_galeria) {
+            Intent i = new Intent(this, GaleriaActivity.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_rutas) {
+            Intent i = new Intent(this, ListarRutaActivity.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_movimiento) {
+            Intent i = new Intent(this, movimiento.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_sensores) {
+            Intent i = new Intent(this, SensoresActivity.class);
+            startActivity(i);
+        }
+        /*
         if (id == R.id.action_settings) {
             return true;
         }
+        */
         return super.onOptionsItemSelected(item);
     }
 
@@ -90,7 +117,7 @@ public class MainActivity extends Activity {
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
         Thread nt = new Thread()
         {
-            String respuesta="error de coneccion";
+            String respuesta="Error de conexión";
             @Override
             public void run()
             {
@@ -106,7 +133,7 @@ public class MainActivity extends Activity {
                     transportSE.call(SOAP_ACTION,envelope);
                     SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
                     respuesta = resultado.toString();
-                    if(respuesta.equals("conectado"))
+                    if(respuesta.equals("Conectado"))
                         Comunicador.setESTADO_SERVICIO(true);
                     else
                         Comunicador.setESTADO_SERVICIO(false);

@@ -2,6 +2,7 @@ package com.example.bastian.nuevo2;
 
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -73,6 +76,54 @@ public class GaleriaActivity extends FragmentActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        /*
+        if (id == R.id.action_conectar) {
+            return true;
+        }
+        */
+        if (id == R.id.action_inicio) {
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_galeria) {
+            Intent i = new Intent(this, GaleriaActivity.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_rutas) {
+            Intent i = new Intent(this, ListarRutaActivity.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_movimiento) {
+            Intent i = new Intent(this, movimiento.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_sensores) {
+            Intent i = new Intent(this, SensoresActivity.class);
+            startActivity(i);
+        }
+        /*
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        */
+        return super.onOptionsItemSelected(item);
     }
 
 

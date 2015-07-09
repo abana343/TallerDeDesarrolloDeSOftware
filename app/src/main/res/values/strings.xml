@@ -3,11 +3,14 @@
 
     <string name="app_name">Segurito</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">configuración</string>
+    <string name="action_settings">Configuración</string>
     <string name="action_conectar">Conectar</string>
     <string name="action_ayuda">Ayuda</string>
-    <string name="action_galeria">galeria</string>
-    <string name="action_rutas">rutas</string>
+    <string name="action_galeria">Galeria</string>
+    <string name="action_inicio">Inicio</string>
+    <string name="action_movimiento">Movimiento</string>
+    <string name="action_sensores">Sensores</string>
+    <string name="action_rutas">Rutas</string>
     <string name="title_activity_ruta">RutaActivity</string>
     <string name="title_activity_movimiento">Segurito</string>
     <string name="title_activity_listar_ruta">Segurito</string>
@@ -16,7 +19,10 @@
     <string name="title_activity_ruta_activity2">Segurito</string>
     <string name="title_activity_sensores">Segurito</string>
     <string name="sensor_no_encontrado" >Sensor no encontrado</string>
-    <string name="title_activity_galeria">GaleriaActivity</string>
+    <string name="title_activity_galeria">Segurito</string>
+
+    <string name="conectado">Conectado</string>
+    <string name="desconectado">Desconectado</string>
 
 
 </resources>
