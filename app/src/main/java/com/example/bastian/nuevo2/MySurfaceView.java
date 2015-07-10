@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -15,17 +14,21 @@ import android.view.SurfaceView;
  */
 public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 {
-    //referencia un thread que usaremos para dibujar.
-    private MySurfaceThread thread;
+    //referencia un _thread que usaremos para dibujar.
+    private MySurfaceThread _thread;
     //variables que indican donde toco la pantalla
-    public int touched_x, touched_y;
+    public int _touched_x, _touched_y;
     //variable que indica si se esta tocando o no la pantalla
-    public boolean touched;
+    public boolean _touched;
 
-    private movimiento mov;
-    private float movx=0,movy=0;
-    private boolean adentro=false;
-    private int ejecutandose=0;
+    /*
+    referencia a la clase movimiento para poder ejecutar los comandos
+    de movimientos con el dibujo del analogo.
+     */
+    private movimiento _mov;
+    private float _movx =0, _movy =0;
+    private boolean _adentro =false;
+    private int _ejecutandose =0;
 
 
 
@@ -38,7 +41,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     public void setMovimiento(movimiento mov)
     {
         try {
-            this.mov= mov;
+            this._mov = mov;
         }
         catch (Exception e){}
     }
@@ -51,26 +54,26 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder)
     {
-        // TODO Auto-generated method stub
-        this.thread = new MySurfaceThread(getHolder(),this);
-        this.thread.setRuning(true);
-        this.thread.start();
+        // TODO Auto-generated method stub comienza la ejecucion del dibujo del analogo
+        this._thread = new MySurfaceThread(getHolder(),this);
+        this._thread.setRuning(true);
+        this._thread.start();
 
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder)
     {
-        Log.e("surfaceDestroyed","hilo detenido");
+        //Cuando se produce en onBackPressed detiene el hilo de ejecucion.
         Comunicador.setCamara(false);
         boolean retry = true;
         //el hilo se detendra.
-        this.thread.setRuning(false);
+        this._thread.setRuning(false);
         while(retry)
         {
             try
             {
-                this.thread.join();
+                this._thread.join();
                 retry=false;
             }
             catch (InterruptedException e){}
@@ -96,17 +99,9 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             {
                 radio=altoH;
             }
-/*
-    Bitmap imgBoton_libre = BitmapFactory.decodeResource(getResources(),R.drawable.botonlibre);
-        Bitmap imgBoton_puch = BitmapFactory.decodeResource(getResources(),R.drawable.botonpress);
-
-        int anchobitmap= imgBoton_libre.getWidth();
-        int altobitmap= imgBoton_puch.getHeight();
- */
-            /// imagen del boton
 
 
-            //pintamos el fondo de color blanco
+            //pintamos el fondo de color Transparente.
             canvas.drawColor(Color.TRANSPARENT);
 
             //definimos circulo externo
@@ -127,25 +122,26 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             imgboton.setDither(true);
 
         /*
-        validacion sobre el movimineto de la palanca, si estamos tocando la pantalla y en donde
-        tocamos esta dentro del sector de la palanca la dibujaremso en donde toco, esto dara la censacion de movimiento.
+        Validamos que el punto donde se este tocando la pantalla este dentro del circulo.
+        para dibujar el analogo y mandar mas tarde la informacion de movimiento.
         */
-            this.movx=touched_x-anchoW;
-            this.movy=touched_y-altoH;
-            double hipo =Math.pow(movx,2)+ Math.pow(movy,2);
+            this._movx = _touched_x -anchoW;
+            this._movy = _touched_y -altoH;
+            double hipo =Math.pow(_movx,2)+ Math.pow(_movy,2);
             hipo=Math.sqrt(hipo);
-            if(touched && //si tocamos
-                    //eje Y
+            if(_touched && //si tocamos
                     hipo<radio
                     )
             {
-                canvas.drawCircle(touched_x,touched_y,35,pcirculointerno);
-                this.adentro=true;
+                //dibujamos el circulo interno donde tocamos la pantalla.
+                canvas.drawCircle(_touched_x, _touched_y,35,pcirculointerno);
+                this._adentro =true;
             }
             else
             {
+                //si no se esta tocando se mantendra en el centro.
                 canvas.drawCircle(anchoW,altoH,35,pcirculointerno);
-                this.adentro=false;
+                this._adentro =false;
             }
         }catch (Exception e)
         {}
@@ -157,39 +153,33 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     {
         //eventos que suceden cuando se toca la pantalla.
         this.mover();
-        touched_x =(int) event.getX();
-        touched_y =(int) event.getY();
+        _touched_x =(int) event.getX();
+        _touched_y =(int) event.getY();
         //leemos el codigo de acción
         int action = event.getAction();
-        Log.e("touched (x,y)","("+touched_x+","+touched_y+")");
 
         switch (action)
         {
             case MotionEvent.ACTION_DOWN://cuando se toca la pantalla
-                Log.e("touchEven ACTION_DOWN","se toco la pantalla");
-                touched=true;
+                _touched =true;
                 break;
             case MotionEvent.ACTION_MOVE://cuando se desplaza el dedo por la pantalla
-                touched=true;
-                Log.e("TouchEven ACTION_MOVE", "nos desplazamos por la pantalla");
+                _touched =true;
                 break;
             case MotionEvent.ACTION_UP://cuando levantamos el dedo de la pantalla
-                touched=false;
-                Log.e("TouchEven ACTION_UP", "ya no tocamos la pantalla");
-                Log.e("parar","parado");
-                mov.parar(this);
-                ejecutandose=0;
+                _touched =false;
+                _mov.parar(this);
+                _ejecutandose =0;
                 break;
             case MotionEvent.ACTION_CANCEL:
-                touched=false;
-                Log.e("TouchEven ACTION_CANCEL","");
-                mov.parar(this);
-                ejecutandose=0;
+                _touched =false;
+                _mov.parar(this);
+                _ejecutandose =0;
                 break;
             case MotionEvent.ACTION_OUTSIDE:
-                touched=false;
-                mov.parar(this);
-                ejecutandose=0;
+                _touched =false;
+                _mov.parar(this);
+                _ejecutandose =0;
                 break;
             default:
         }
@@ -198,34 +188,31 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     private void mover()
     {
-        Log.e("----------","----");
-        Log.e("x reducido",""+this.movx);
-        Log.e("y reducido",""+this.movy);
+        //dependiendo de los puntos de donde se toque el analogo se movera el robot.
         float div;
-        if(this.adentro)
+        if(this._adentro)
         {
 
-            if(this.movx!=0)
+            if(this._movx !=0)
             {
-                div = this.movy/this.movx;
-                Log.e("divicion="," "+div);
+                div = this._movy /this._movx;
                 if(div>0.41 && div<=2.41)
                 {
-                    if(this.movx<0)
+                    if(this._movx <0)
                     {
-                        if(ejecutandose!=1)
+                        if(_ejecutandose !=1)
                         {
-                            Log.e("mover en ","diagonal arriba iz");
-                            mov.dNO(this);
-                            ejecutandose=1;
+                           // Log.e("mover en ","diagonal arriba iz");
+                            _mov.dNO(this);
+                            _ejecutandose =1;
                         }
                     }else
                     {
-                        if(ejecutandose!=2)
+                        if(_ejecutandose !=2)
                         {
-                            Log.e("mover en ","diagonal abajo der");
-                            mov.dSE(this);
-                            ejecutandose=2;
+                           // Log.e("mover en ","diagonal abajo der");
+                            _mov.dSE(this);
+                            _ejecutandose =2;
                         }
 
                     }
@@ -233,39 +220,39 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 //................
                 if(div<=-0.41 && div>-2.41)
                 {
-                    if(this.movx<0)
+                    if(this._movx <0)
                     {
-                        if(ejecutandose!=3){
-                            Log.e("mover en ","diagonal abajo iz");
-                            mov.dSO(this);
-                            ejecutandose=3;
+                        if(_ejecutandose !=3){
+                            //Log.e("mover en ","diagonal abajo iz");
+                            _mov.dSO(this);
+                            _ejecutandose =3;
                         }
                     }else
                     {
-                        if(ejecutandose!=4) {
-                            Log.e("mover en ", "diagonal arriba der");
-                            mov.dNE(this);
-                            ejecutandose=4;
+                        if(_ejecutandose !=4) {
+                           // Log.e("mover en ", "diagonal arriba der");
+                            _mov.dNE(this);
+                            _ejecutandose =4;
                         }
                     }
                 }
                 //................
                 if((div>-0.41 && div<=0) || (div<=0.41 && div>=0))
                 {
-                    if(this.movx<0)
+                    if(this._movx <0)
                     {
-                        if(ejecutandose!=5) {
-                            Log.e("mover en ", "Izquierda");
-                            mov.izquierda(this);
-                            ejecutandose=5;
+                        if(_ejecutandose !=5) {
+                          //  Log.e("mover en ", "Izquierda");
+                            _mov.izquierda(this);
+                            _ejecutandose =5;
                         }
                     }else
                     {
-                        if(ejecutandose!=6)
+                        if(_ejecutandose !=6)
                         {
-                            Log.e("mover en ","derecha");
-                            mov.derecha(this);
-                            ejecutandose=6;
+                            //Log.e("mover en ","derecha");
+                            _mov.derecha(this);
+                            _ejecutandose =6;
                         }
 
                     }
@@ -273,39 +260,39 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 //................
                 if(div<= -2.41 || div> 2.41)
                 {
-                    if(this.movy<0)
+                    if(this._movy <0)
                     {
-                        if(ejecutandose!=7) {
-                            Log.e("mover en ", "arriba");
-                            mov.adelante(this);
-                            ejecutandose=7;
+                        if(_ejecutandose !=7) {
+                           // Log.e("mover en ", "arriba");
+                            _mov.adelante(this);
+                            _ejecutandose =7;
                         }
                     }else
                     {
-                        if(ejecutandose!=8) {
-                            Log.e("mover en ", "abajo");
-                            mov.atras(this);
-                            ejecutandose=8;
+                        if(_ejecutandose !=8) {
+                           // Log.e("mover en ", "abajo");
+                            _mov.atras(this);
+                            _ejecutandose =8;
                         }
                     }
                 }
 
             }else
             {
-                if(movy<0)
+                if(_movy <0)
                 {
-                    if(ejecutandose!=7){
-                        Log.e("mover en ","arriba");
-                        mov.adelante(this);
-                        ejecutandose=7;
+                    if(_ejecutandose !=7){
+                      //  Log.e("mover en ","arriba");
+                        _mov.adelante(this);
+                        _ejecutandose =7;
                     }
                 }
                 else
                 {
-                    if(ejecutandose!=8) {
-                        Log.e("mover en ", "abajo");
-                        mov.atras(this);
-                        ejecutandose=8;
+                    if(_ejecutandose !=8) {
+                       // Log.e("mover en ", "abajo");
+                        _mov.atras(this);
+                        _ejecutandose =8;
                     }
                 }
             }
