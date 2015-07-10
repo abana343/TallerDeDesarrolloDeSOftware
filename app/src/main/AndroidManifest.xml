@@ -39,11 +39,6 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".RutaActivity"
-            android:label="@string/title_activity_ruta_activity2"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
             android:name=".SensoresActivity"
             android:label="@string/title_activity_sensores"
             android:screenOrientation="portrait">

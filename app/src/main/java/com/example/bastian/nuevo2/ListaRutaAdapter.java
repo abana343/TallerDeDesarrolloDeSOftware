@@ -15,20 +15,20 @@ import java.util.List;
  */
 public class ListaRutaAdapter extends BaseAdapter {
 
-    private Context context;
-    private List<Ruta> rutas;
-    public ListaRutaAdapter(Context context, List<Ruta> rutas) {
-        this.context = context;
-        this.rutas = rutas;
+    private Context _context;
+    private List<Ruta> _rutas;
+    public ListaRutaAdapter(Context context, List<Ruta> _rutas) {
+        this._context = context;
+        this._rutas = _rutas;
     }
     @Override
     public int getCount() {
-        return this.rutas.size();
+        return this._rutas.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return this.rutas.get(position);
+        return this._rutas.get(position);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ListaRutaAdapter extends BaseAdapter {
 
         if (convertView == null) {
             // Create a new view into the list.
-            LayoutInflater inflater = (LayoutInflater) context
+            LayoutInflater inflater = (LayoutInflater) _context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rowView = inflater.inflate(R.layout.item_rutas, parent, false);
         }
@@ -50,28 +50,28 @@ public class ListaRutaAdapter extends BaseAdapter {
         // Set data into the view.
 
 
-        TextView nombre = (TextView) rowView.findViewById((R.id.textViewNombreRuta));
-        TextView puntos = (TextView) rowView.findViewById((R.id.textViewPuntos));
-        TextView distancia = (TextView) rowView.findViewById((R.id.textViewDistanciaTotal));
+        TextView _nombre = (TextView) rowView.findViewById((R.id.textViewNombreRuta));
+        TextView _puntos = (TextView) rowView.findViewById((R.id.textViewPuntos));
+        TextView _distancia = (TextView) rowView.findViewById((R.id.textViewDistanciaTotal));
 
-        Ruta ruta = rutas.get(position);
+        Ruta _ruta = _rutas.get(position);
 
 
         //_nombre rutaActivity
-        nombre.setText(ruta._nombre);
+        _nombre.setText(_ruta._nombre);
 
         //puntos rutaActivity
-        puntos.setText("Puntos: " + ruta.get_puntos().size());
+        _puntos.setText("Puntos: " + _ruta.get_puntos().size());
 
         //distancia recorrida
-        double distanciaRecorrida = ruta.distanciaTotal();
-        distancia.setText("Distancia " + String.format("%.2f", distanciaRecorrida) + "cms");
+        double distanciaRecorrida = _ruta.distanciaTotal();
+        _distancia.setText("Distancia " + String.format("%.2f", distanciaRecorrida) + "cms");
 
         return rowView;
     }
 
     public void setdatos(List<Ruta> rutas){
-        this.rutas = rutas;
+        this._rutas = rutas;
         notifyDataSetChanged();
     }
 

@@ -1,7 +1,6 @@
 package com.example.bastian.nuevo2;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 
 import android.os.Bundle;
@@ -13,115 +12,50 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class ListarRutaActivity extends Activity {
 
-    private ListView listViewRutas;
-    private List<Ruta> list;
-    private String respuestaWS;
+    private ListView _listViewRutas;
+    private List<Ruta> _lista;
+    private String _respuestaWS;
 
-    private Boolean esperandoThread = true;
+    private Boolean _esperandoThread = true;
 
-    private Context context;
 
-    private ListaRutaAdapter adapterRuta;
+
+    private ListaRutaAdapter _adapterRuta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listar_ruta);
 
-        respuestaWS = "error";
+        _respuestaWS = "error";
 
 
-        this.listViewRutas = (ListView) findViewById(R.id.listViewRutas);
+        this._listViewRutas = (ListView) findViewById(R.id.listViewRutas);
 
-        list = cargarRutaInterna();
-
-
-
-        adapterRuta=new ListaRutaAdapter(this,list);
-        this.listViewRutas.setAdapter(adapterRuta);
-        this.listViewRutas.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-/*                        DESCOMENTAR <----------------------------------------
-        obtenerRutas();
-        while(esperandoThread) {
+        _lista = cargarRutaInterna();
 
 
-        }
 
-
-        esperandoThread=true;
-        if(!respuestaWS.equals("error"))
-        {
-            list = crearRutas();
-
-            this.listViewRutas.setAdapter(new ListaRutaAdapter(this,list));
-        }
-        context = getApplicationContext();
-        cargado();
-        */
+        _adapterRuta =new ListaRutaAdapter(this, _lista);
+        this._listViewRutas.setAdapter(_adapterRuta);
+        this._listViewRutas.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        list = cargarRutaInterna();
-        adapterRuta.setdatos(list);
+        _lista = cargarRutaInterna();
+        _adapterRuta.setdatos(_lista);
     }
 
-
-
-    public void cargado(){
-        Toast.makeText(this, "Cargando rutas", Toast.LENGTH_SHORT).show();
-
-        String msg = "Error cargar las rutas\n revisa tu conexion al servidor";
-        //Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-        Thread nt = new Thread()
-        {
-            @Override
-            public void run()
-            {
-                obtenerRutas();
-                while(esperandoThread) {}
-                esperandoThread=true;
-                if(!respuestaWS.equals("error"))
-                {
-                    list = crearRutas();
-
-                    listViewRutas.setAdapter(new ListaRutaAdapter(context,list));
-                }
-                else {
-                    context = getApplicationContext();
-                    String msg = "Error cargar las rutas\n revisa tu conexion al servidor";
-                    //Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-
-        nt.start();
-    }
-
-
-
-
-
-
-
-
-
+    //metodo para generar rutas prueba
     public List<Ruta> ruta()
     {
         List<Ruta> list = new ArrayList<>();
@@ -159,31 +93,24 @@ public class ListarRutaActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        /*
-        if (id == R.id.action_conectar) {
-            return true;
-        }
-        */
-        if (id == R.id.action_inicio) {
+        int _id = item.getItemId();
+        if (_id == R.id.action_inicio) {
             Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
         }
-        if (id == R.id.action_galeria) {
+        if (_id == R.id.action_galeria) {
             Intent i = new Intent(this, GaleriaActivity.class);
             startActivity(i);
         }
-        if (id == R.id.action_rutas) {
+        if (_id == R.id.action_rutas) {
             Intent i = new Intent(this, ListarRutaActivity.class);
             startActivity(i);
         }
-        if (id == R.id.action_movimiento) {
+        if (_id == R.id.action_movimiento) {
             Intent i = new Intent(this, movimiento.class);
             startActivity(i);
         }
-        if (id == R.id.action_sensores) {
+        if (_id == R.id.action_sensores) {
             Intent i = new Intent(this, SensoresActivity.class);
             startActivity(i);
         }
@@ -204,146 +131,34 @@ public class ListarRutaActivity extends Activity {
 
 
 
-
-
-    public void obtenerRutas()
-    {
-        String server = Comunicador.getIpWebService();
-
-        final String URL = "http://" + server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
-        final String METHOD_NAME = "obtenerRutas";
-        final String SOAP_ACTION = Comunicador.NAMESPACE + METHOD_NAME;
-
-
-        Thread nt = new Thread()
-        {
-            @Override
-            public void run()
-            {
-                respuestaWS = "error";
-                SoapObject request = new SoapObject(Comunicador.NAMESPACE,METHOD_NAME);
-                //request.addProperty("hostnameIP","172.26.201.3");//el primer argumento es el string que identifica el web param
-                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-                envelope.setOutputSoapObject(request);
-                HttpTransportSE transportSE = new HttpTransportSE(URL);
-                try {
-                    transportSE.call(SOAP_ACTION,envelope);
-                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
-                    respuestaWS = resultado.toString();
-                    esperandoThread = false;
-
-                } catch (IOException e) {
-                    respuestaWS = "error";
-                    esperandoThread = false;
-                } catch (XmlPullParserException e) {
-                    respuestaWS = "error";
-                    esperandoThread = false;
-                }
-
-            }
-
-        };
-
-        nt.start();
-
-    }
-
-    public void cargarRuta(final String idRuta)
-    {
-        String server = Comunicador.getIpWebService();
-
-        final String URL = "http://" + server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
-        final String METHOD_NAME = "pasosRuta";
-        final String SOAP_ACTION = Comunicador.NAMESPACE + METHOD_NAME;
-
-
-        Thread nt = new Thread()
-        {
-            @Override
-            public void run()
-            {
-                SoapObject request = new SoapObject(Comunicador.NAMESPACE,METHOD_NAME);
-                request.addProperty("idRuta",idRuta);
-                //request.addProperty("hostnameIP","172.26.201.3");//el primer argumento es el string que identifica el web param
-                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-                envelope.setOutputSoapObject(request);
-                HttpTransportSE transportSE = new HttpTransportSE(URL);
-                try {
-                    transportSE.call(SOAP_ACTION,envelope);
-                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
-                    respuestaWS = resultado.toString();
-
-                    esperandoThread = false;
-
-
-                } catch (IOException e) {
-                    respuestaWS = "error: ";
-                    esperandoThread = false;
-                } catch (XmlPullParserException e) {
-                    respuestaWS = "error";
-                    esperandoThread = false;
-                }
-
-            }
-
-        };
-
-        nt.start();
-
-    }
-
-
-
-
-    private List<Ruta> crearRutas()
-    {
-
-        List<Ruta> rutas = new ArrayList<>();
-        //generamos las rutas sin puntos con los parametros ID, _escala y nommbre
-        String rutasCadena[] = respuestaWS.split("<->");
-        for(int i = 0 ; i< rutasCadena.length;i++){
-            String rutaDatos[] = rutasCadena[i].split(",");
-            Ruta ruta = new Ruta(Integer.parseInt(rutaDatos[0]),Integer.parseInt(rutaDatos[1]),rutaDatos[2]);
-            rutas.add(ruta);
-        }
-        if(rutas.size() >0)
-        {
-            respuestaWS = "error";
-        }
-        return rutas;
-    }
-
-
-
-
     public void deleteSelected(View view) {
         //Obtengo los elementos seleccionados de mi lista
-        SparseBooleanArray seleccionados = listViewRutas.getCheckedItemPositions();
+        SparseBooleanArray _seleccionados = _listViewRutas.getCheckedItemPositions();
 
-        if(seleccionados==null || seleccionados.size()==0){
+        if(_seleccionados==null || _seleccionados.size()==0){
             //Si no había elementos seleccionados...
             Toast.makeText(this, "No hay elementos seleccionados", Toast.LENGTH_SHORT).show();
         }else{
-            int resultado = 0;
-            final int size=seleccionados.size();
-            for (int i=0; i<size; i++) {
-                if (seleccionados.valueAt(i)) {
-                    resultado = seleccionados.keyAt(i);
+            int _resultado = 0;
+            final int _size=_seleccionados.size();
+            for (int i=0; i<_size; i++) {
+                if (_seleccionados.valueAt(i)) {
+                    _resultado = _seleccionados.keyAt(i);
 
                 }
             }
 
-            Comunicador.getBaseDatoRuta().eliminarRuta(list.get(resultado).get_ID());
-            list = cargarRutaInterna();
-            adapterRuta.setdatos(list);
+            Comunicador.getBaseDatoRuta().eliminarRuta(_lista.get(_resultado).get_ID());
+            _lista = cargarRutaInterna();
+            _adapterRuta.setdatos(_lista);
 
 
 
 
         }
     }
-    public void onClickCargaRutaPrueba(View view){                    ///}TESSST
-        SparseBooleanArray seleccionados = listViewRutas.getCheckedItemPositions();
+    public void onClickCargaRuta(View view){
+        SparseBooleanArray seleccionados = _listViewRutas.getCheckedItemPositions();
         if(seleccionados==null || seleccionados.size()==0) {
             //Si no había elementos seleccionados...
             Toast.makeText(this, "No hay elementos seleccionados", Toast.LENGTH_SHORT).show();
@@ -357,8 +172,8 @@ public class ListarRutaActivity extends Activity {
 
                 }
             }
-            Comunicador.getBaseDatoRuta().cargarPuntosARuta(list.get(resultado));
-            Comunicador.setObjeto(list.get(resultado));
+            Comunicador.getBaseDatoRuta().cargarPuntosARuta(_lista.get(resultado));
+            Comunicador.setObjeto(_lista.get(resultado));
             Intent i = new Intent(this, RutaActivity.class);
             startActivity(i);
 

@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:text="Cargar"
             android:id="@+id/buttonCargarRuta"
-            android:onClick="onClickCargaRutaPrueba" />
+            android:onClick="onClickCargaRuta" />
 
         <Button
             style="?android:attr/buttonStyleSmall"

@@ -84,7 +84,6 @@ public class Ruta {
     {
 
         if(_puntos.size() > i && _puntos.size() != 0 && i != -1) {
-            System.out.println(_puntos.size() + "  " +i);
             _puntos.remove(i);
             actualizarLista();
         }
