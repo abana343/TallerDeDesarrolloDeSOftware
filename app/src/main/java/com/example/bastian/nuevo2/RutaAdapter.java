@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,21 +16,21 @@ import java.util.List;
  */
 public class RutaAdapter extends BaseAdapter {
 
-    private Context context;
-    private List<String> linea;
+    private Context _context;
+    private List<String> _linea;
     public RutaAdapter(Context context, List<String> linea) {
-        this.context = context;
-        this.linea = linea;
+        this._context = context;
+        this._linea = linea;
     }
 
     @Override
     public int getCount() {
-        return this.linea.size();
+        return this._linea.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return this.linea.get(position);
+        return this._linea.get(position);
     }
 
     @Override
@@ -45,24 +44,22 @@ public class RutaAdapter extends BaseAdapter {
 
         if (convertView == null) {
             // Create a new view into the list.
-            LayoutInflater inflater = (LayoutInflater) context
+            LayoutInflater inflater = (LayoutInflater) _context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rowView = inflater.inflate(R.layout.linea, parent, false);
         }
 
         // Set data into the view.
 
-        TextView textView = (TextView) rowView.findViewById(R.id.label);
-        textView.setText(linea.get(position));
+        TextView _textView = (TextView) rowView.findViewById(R.id.label);
+        _textView.setText(_linea.get(position));
 
-        TextView identificador = (TextView) rowView.findViewById((R.id.identificadorNumerico));
-        identificador.setText(Integer.toString(position+1) + "-" + Integer.toString(position+2));
-       //imagenRuta.setImageResource(R.drawable.number1);
-        //imagenRuta.setImageBitmap(rutaActivity.bitmap);
-        ImageButton botonCerrar = (ImageButton) rowView.findViewById(R.id.buttonEliminar);
-        botonCerrar.setTag(position);
-        ImageButton botonEditar = (ImageButton) rowView.findViewById(R.id.buttonEditar);
-        botonEditar.setTag(position);
+        TextView _identificador = (TextView) rowView.findViewById((R.id.identificadorNumerico));
+        _identificador.setText(Integer.toString(position + 1) + "-" + Integer.toString(position + 2));
+        ImageButton _botonCerrar = (ImageButton) rowView.findViewById(R.id.buttonEliminar);
+        _botonCerrar.setTag(position);
+        ImageButton _botonEditar = (ImageButton) rowView.findViewById(R.id.buttonEditar);
+        _botonEditar.setTag(position);
         return rowView;
     }
 

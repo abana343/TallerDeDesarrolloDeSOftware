@@ -19,48 +19,45 @@ import java.util.List;
 
 /**
  * Created by Javier Aros on 23-06-2015.
+ *
  */
 public class SensorSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
-    private MySurfaceThread thread;
-    private Bitmap imagenRobot;
-    private List<String> sensores;
-    Context context;
-    private ArrayList<Point> puntos;
-    private int width;
-    private int height;
+    private MySurfaceThread _thread;
+    private Bitmap _imagenRobot;
+    private List<String> _sensores;
+    Context _context;
+    private ArrayList<Point> _puntos;
+    private int _ancho;
+    private int _alto;
     public SensorSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
         getHolder().addCallback(this);
-        imagenRobot = BitmapFactory.decodeResource(getResources(), R.drawable.robot_sensores);
-        sensores = new ArrayList<>();
-        this.context = context;
+        _imagenRobot = BitmapFactory.decodeResource(getResources(), R.drawable.robot_sensores);
+        _sensores = new ArrayList<>();
+        this._context = context;
 
 
 
     }
 
-
-
-
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        this.thread = new MySurfaceThread(getHolder(),this);
-        this.thread.setRuning(true);
-        this.thread.start();
+        this._thread = new MySurfaceThread(getHolder(),this);
+        this._thread.setRuning(true);
+        this._thread.start();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        this.width = width;
-        this.height = height;
-        System.out.println("width  " + width + "  height:  " + height);
+        this._ancho = width;
+        this._alto = height;
         // Read your drawable from somewhere
-        Drawable dr = getResources().getDrawable(R.drawable.robot_sensores2);
-        Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
+        Drawable _dr = getResources().getDrawable(R.drawable.robot_sensores2);
+        Bitmap _bitmap = ((BitmapDrawable) _dr).getBitmap();
 // Scale it to 50 x 50
-        Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, width, height, true));
+        Drawable _d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(_bitmap, width, height, true));
 // Set your new, scaled drawable "d"
-        imagenRobot = ((BitmapDrawable) d).getBitmap();
+        _imagenRobot = ((BitmapDrawable) _d).getBitmap();
         generaPuntos();
     }
 
@@ -71,12 +68,12 @@ public class SensorSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
         boolean retry = true;
         //el hilo se detendra.
-        this.thread.setRuning(false);
+        this._thread.setRuning(false);
         while(retry)
         {
             try
             {
-                this.thread.join();
+                this._thread.join();
                 retry=false;
             }
             catch (InterruptedException e){}
@@ -89,27 +86,27 @@ public class SensorSurfaceView extends SurfaceView implements SurfaceHolder.Call
             int y = 45;
 
 
-            canvas.drawBitmap(imagenRobot,0,0,new Paint());
-            if(sensores.size() > 0){
+            canvas.drawBitmap(_imagenRobot,0,0,new Paint());
+            if(_sensores.size() > 0){
 
-                if(!sensores.get(0).equals(context.getString(R.string.sensor_no_encontrado))){
-                    for(int i = 0 ; i< sensores.size();i++){
-                        float valor = Float.parseFloat(sensores.get(i));
-                        Paint paint = new Paint();
-                        if (valor <= 0.5){
-                            paint.setColor(Color.GREEN);
+                if(!_sensores.get(0).equals(_context.getString(R.string.sensor_no_encontrado))){
+                    for(int i = 0 ; i< _sensores.size();i++){
+                        float _valor = Float.parseFloat(_sensores.get(i));
+                        Paint _paint = new Paint();
+                        if (_valor <= 0.5){
+                            _paint.setColor(Color.GREEN);
                         }
-                        else if(valor <=2){
-                            paint.setColor(Color.YELLOW);
+                        else if(_valor <=2){
+                            _paint.setColor(Color.YELLOW);
                         }
                         else{
-                            paint.setColor(Color.RED);
+                            _paint.setColor(Color.RED);
                         }
 
-                        canvas.drawCircle(puntos.get(i).x,puntos.get(i).y,40,paint);
-                        paint.setTextSize(50);
-                        paint.setColor(Color.BLACK);
-                        canvas.drawText(""+(i+1),puntos.get(i).x-10,puntos.get(i).y+10,paint);
+                        canvas.drawCircle(_puntos.get(i).x, _puntos.get(i).y,40,_paint);
+                        _paint.setTextSize(50);
+                        _paint.setColor(Color.BLACK);
+                        canvas.drawText("" + (i + 1), _puntos.get(i).x - 10, _puntos.get(i).y + 10, _paint);
                     }
 
                 }
@@ -124,41 +121,29 @@ public class SensorSurfaceView extends SurfaceView implements SurfaceHolder.Call
     }
 
     private void generaPuntos(){
-        puntos = new ArrayList<>();
-        /*
-        puntos.add(new Point(6*width/11,height-(int)(height*0.1)));
+        _puntos = new ArrayList<>();
 
-        puntos.add(new Point(4*width/5,height-(int)(height*0.2)));
-        puntos.add(new Point(8*width/9,height-(int)(height*0.4)));
-        puntos.add(new Point(8*width/9,height-(int)(height*0.6)));
-        puntos.add(new Point(6*width/8,height-(int)(height*0.9)));
+        _puntos.add(new Point(515,675));
 
-        puntos.add(new Point(2*width/7,height-(int)(height*0.9)));
-        puntos.add(new Point(1*width/9,height-(int)(height*0.6)));
-        puntos.add(new Point(1*width/9,height-(int)(height*0.4)));
-        puntos.add(new Point(1*width/5,height-(int)(height*0.2)));
-        */
-        puntos.add(new Point(515,675));
+        _puntos.add(new Point(760, 580));
+        _puntos.add(new Point(850, 435));
+        _puntos.add(new Point(874, 280));
+        _puntos.add(new Point(715, 85));
 
-        puntos.add(new Point(760,580));
-        puntos.add(new Point(850,435));
-        puntos.add(new Point(874,280));
-        puntos.add(new Point(715,85));
+        _puntos.add(new Point(280, 85));
+        _puntos.add(new Point(109, 280));
+        _puntos.add(new Point(130, 435));
+        _puntos.add(new Point(210, 580));
 
-        puntos.add(new Point(280,85));
-        puntos.add(new Point(109,280));
-        puntos.add(new Point(130,435));
-        puntos.add(new Point(210,580));
-        System.out.println("width " + width + "   hei  " + height );
     }
 
-    public void setSensores(List lista){
-        sensores = lista;
+    public void set_sensores(List lista){
+        _sensores = lista;
 
     }
 
 
-    public void setImagenRobot(Bitmap imagenRobot){
+    public void set_imagenRobot(Bitmap _imagenRobot){
 
         //this.imagenRobot = imagenRobot;
     }

@@ -1,26 +1,18 @@
 package com.example.bastian.nuevo2;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.format.Time;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.ksoap2.SoapEnvelope;
@@ -34,10 +26,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 
 public class movimiento extends Activity {
@@ -119,7 +109,7 @@ public class movimiento extends Activity {
 
     public void iniciar()
     {
-        mov=Comunicador.getMovimiento();
+        mov=Comunicador.getMOVIMIENTO();
         if(1 == mov)
         {
             setContentView(R.layout.movimiento_clasico);
@@ -140,12 +130,12 @@ public class movimiento extends Activity {
         try {
         }catch (Exception e){}
         try {
-            server = Comunicador.getIpWebService();
+            server = Comunicador.getIP_WEB_SERVICE();
             URL= "http://"+server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";
         }catch (Exception e){}
 
         Log.e("server=",""+server);
-        Comunicador.setCamara(true);
+        Comunicador.setCAMARA(true);
         pedirImagen2();
     }
 
@@ -213,7 +203,7 @@ public class movimiento extends Activity {
                 //quiza poner ciclo aqui
                 //Thread.sleep(100);
                 try {
-                    while (Comunicador.getCamara()) {
+                    while (Comunicador.getCAMARA()) {
                         Thread.sleep(100);
                         try {
                             transportSE.call(SOAP_ACTION,envelope);

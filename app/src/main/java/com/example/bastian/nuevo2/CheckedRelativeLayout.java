@@ -4,7 +4,6 @@ package com.example.bastian.nuevo2;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Checkable;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 /**
@@ -16,7 +15,7 @@ public class CheckedRelativeLayout extends RelativeLayout implements Checkable {
     /**
      * Esta variable es la que nos sirve para almacenar el estado de este widget
      */
-    private boolean mChecked=false;
+    private boolean _mChecked =false;
 
     /**
      * Este array se usa para que los drawables que se usen
@@ -42,7 +41,7 @@ public class CheckedRelativeLayout extends RelativeLayout implements Checkable {
      */
     @Override
     public void setChecked(boolean checked) {
-        mChecked = checked;
+        _mChecked = checked;
         //Cuando cambiamos el estado, debemos informar a los drawables
         //que este widget tenga vinculados
         refreshDrawableState();
@@ -55,7 +54,7 @@ public class CheckedRelativeLayout extends RelativeLayout implements Checkable {
      */
     @Override
     public boolean isChecked() {
-        return mChecked;
+        return _mChecked;
     }
 
     /**
@@ -64,7 +63,7 @@ public class CheckedRelativeLayout extends RelativeLayout implements Checkable {
      */
     @Override
     public void toggle() {
-        setChecked(!mChecked);
+        setChecked(!_mChecked);
     }
 
     /**

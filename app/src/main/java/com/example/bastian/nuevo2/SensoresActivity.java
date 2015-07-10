@@ -1,8 +1,6 @@
 package com.example.bastian.nuevo2;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,7 +8,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -29,59 +26,44 @@ public class SensoresActivity extends Activity {
 
     private static final String NAMESPACE = "http://services.ws.rws/";
     private static String URL = "http://172.26.201.4:"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
-    private static String server="172.26.201.4";
+    private static String SERVER ="172.26.201.4";
 
 
 
-    private ListView listViewSensores;
-    private SensoresAdapter adapter;
-    private List<String> datosSensores;
-    private SensorSurfaceView surfaceViewSensor;
-    private Bitmap imagenRobot;
-    boolean iteracion;
+    private ListView _listViewSensores;
+    private SensoresAdapter _adapter;
+    private List<String> _datosSensores;
+    private SensorSurfaceView _surfaceViewSensor;
+    private Bitmap _imagenRobot;
+    boolean _iteracion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensores);
         inicializaDatosSensores();
-        this.listViewSensores = (ListView) findViewById(R.id.listsensores);
+        this._listViewSensores = (ListView) findViewById(R.id.listsensores);
 
-        this.adapter = new SensoresAdapter(this,datosSensores );
-        this.listViewSensores.setAdapter(adapter);
-        surfaceViewSensor = (SensorSurfaceView) findViewById(R.id.surfaceViewSensor);
+        this._adapter = new SensoresAdapter(this, _datosSensores);
+        this._listViewSensores.setAdapter(_adapter);
+        _surfaceViewSensor = (SensorSurfaceView) findViewById(R.id.surfaceViewSensor);
         try {
-            server = Comunicador.getIpWebService();
-            URL= "http://"+server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";
+            SERVER = Comunicador.getIP_WEB_SERVICE();
+            URL= "http://"+ SERVER +":"+Comunicador.getPUERTO()+"/WSR/Servicios";
         }catch (Exception e){}
 
-        imagenRobot = BitmapFactory.decodeResource(getResources(), R.drawable.robot_sensores);
-        surfaceViewSensor.setImagenRobot(imagenRobot);
-        surfaceViewSensor.setSensores(datosSensores);
+        _imagenRobot = BitmapFactory.decodeResource(getResources(), R.drawable.robot_sensores);
+        _surfaceViewSensor.set_imagenRobot(_imagenRobot);
+        _surfaceViewSensor.set_sensores(_datosSensores);
         getSensores();
     }
 
 
     private void inicializaDatosSensores(){
-        datosSensores = new ArrayList<>();
+        _datosSensores = new ArrayList<>();
         for(int i = 0 ; i<9;i++){
-            datosSensores.add(getString(R.string.sensor_no_encontrado));
+            _datosSensores.add(getString(R.string.sensor_no_encontrado));
         }
-
-
-        /* datos prueba
-        datosSensores = new ArrayList<>();
-            datosSensores.add("3.2323");
-            datosSensores.add("2.4");
-            datosSensores.add("2.2212");
-            datosSensores.add("2.012");
-            datosSensores.add("1.8");
-            datosSensores.add("1.51");
-            datosSensores.add("1.2232");
-            datosSensores.add("0.8");
-            datosSensores.add("0.4");
-         */
-
     }
 
 
@@ -135,12 +117,12 @@ public class SensoresActivity extends Activity {
 
     public void getSensores()
     {
-        iteracion= true;
+        _iteracion = true;
         //esta parte se agrego para poder pedir la imagen sin necesidad de conectar ya que toma la ip del server del edittext
         //EditText editTextServer = (EditText) findViewById(R.id.editTextIpServer);
         // String localserver = editTextServer.getText().toString();//192.168.56.1
         //localserver = "192.168.1.40";
-        final String URL = "http://"+server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
+        final String URL = "http://"+ SERVER +":"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
         //final String URL = "http://" + server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
         final String METHOD_NAME = "mediaDatosSensores";//mediaDatosSensores
         final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
@@ -157,7 +139,7 @@ public class SensoresActivity extends Activity {
 
 
                 try {
-                    while (iteracion) {
+                    while (_iteracion) {
                         Thread.sleep(100);
                         try {
                             transportSE.call(SOAP_ACTION,envelope);
@@ -181,8 +163,7 @@ public class SensoresActivity extends Activity {
                                 }
 
 
-                                //Toast.makeText(MainActivity.this,String.valueOf(contador),Toast.LENGTH_SHORT).show();
-                            }
+                                       }
                         });
                     }
                 } catch (InterruptedException e) {
@@ -204,8 +185,8 @@ public class SensoresActivity extends Activity {
             lista.add(e);
 
         }
-        adapter.setSensores(lista);
-        surfaceViewSensor.setSensores(lista);
+        _adapter.set_sensores(lista);
+        _surfaceViewSensor.set_sensores(lista);
     }
 
     /*
@@ -215,7 +196,7 @@ public class SensoresActivity extends Activity {
     public void onBackPressed()
     {
         //Toast.makeText(SensoresActivity.this,"Detenido", Toast.LENGTH_SHORT).show();
-        iteracion=false;
+        _iteracion =false;
         SensoresActivity.super.onBackPressed();
     }
 

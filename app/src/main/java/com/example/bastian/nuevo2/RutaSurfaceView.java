@@ -13,46 +13,38 @@ import android.view.SurfaceView;
 
 /**
  * Created by Javier Aros on 28-05-2015.
+ * Contiene el surface para dibujar una ruta
  */
 public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
-    private MySurfaceThread thread;
-    RutaActivity rutaActivity;
-    Ruta ruta;
-    int ancho;
-    int alto;
-    int escala;
+    private MySurfaceThread _thread;
+    RutaActivity _rutaActivity;
+    Ruta _ruta;
+    int _ancho;
+    int _alto;
+    int _escala;
 
-    String accionActual = "ninguna";
-    float touchX;
-    float touchY;
+    String _accionActual = "ninguna";
+    float _touchX;
+    float _touchY;
 
-    int radioPunto = 30;
-    Point puntoSelecionado  = null;
-    int seleccionNodoEliminar = -1;
+    int _radioPunto = 30;
+    Point _puntoSelecionado = null;
+    int _seleccionNodoEliminar = -1;
 
     public RutaSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
         //usaremos esta clase como manejador
         getHolder().addCallback(this);
-        escala = 5;
+        _escala = 5;
 
 
 
-        ruta = (Ruta)Comunicador.getObjeto();
-        if (ruta == null)
+        _ruta = (Ruta)Comunicador.getObjeto();
+        if (_ruta == null)
         {
             //Si no existe rutaActivity guardada crea una nueva
-            ruta = new Ruta();
+            _ruta = new Ruta();
         }
-
-/*
-        for(int j = 3,i=5 ; j <7 ; j++ , i+=3)
-        {
-            ruta.agregarPunto(i*i*i,j*j*j);
-            ruta.agregarPunto(i*i*j,j*j*i);
-        }
-        //////////////////////////
-*/
 
 
     }
@@ -61,50 +53,50 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     private void dibujarRuta(Canvas canvas)
     {
-        int rutaPuntosSize = ruta.get_puntos().size();
-        Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setStrokeWidth(4);
-        if(rutaPuntosSize != 0 && accionActual.equals("AgregarNodo") && touchX != -1){
-            canvas.drawLine(ruta.get_puntos().get(rutaPuntosSize-1).x,ruta.get_puntos().get(rutaPuntosSize-1).y,touchX,touchY,paint);
+        int _rutaPuntosSize = _ruta.get_puntos().size();
+        Paint _paint = new Paint();
+        _paint.setColor(Color.BLACK);
+        _paint.setStyle(Paint.Style.FILL);
+        _paint.setStrokeWidth(4);
+        if(_rutaPuntosSize != 0 && _accionActual.equals("AgregarNodo") && _touchX != -1){
+            canvas.drawLine(_ruta.get_puntos().get(_rutaPuntosSize-1).x, _ruta.get_puntos().get(_rutaPuntosSize-1).y, _touchX, _touchY,_paint);
 
         }
 
 
-        if(rutaPuntosSize == 1 && accionActual.equals("AgregarNodo")){
+        if(_rutaPuntosSize == 1 && _accionActual.equals("AgregarNodo")){
 
-            if ( seleccionNodoEliminar == 0){
-                dibujarPunto(ruta.get_puntos().get(0),1,canvas,true);
+            if ( _seleccionNodoEliminar == 0){
+                dibujarPunto(_ruta.get_puntos().get(0),1,canvas,true);
             }
             else{
-                dibujarPunto(ruta.get_puntos().get(0),1,canvas,false);
+                dibujarPunto(_ruta.get_puntos().get(0),1,canvas,false);
             }
 
         }
 
-        for(int i = 0; i < rutaPuntosSize-1;i++){
-            Point p1 , p2;
-            p1 = ruta.get_puntos().get(i);
-            p2 = ruta.get_puntos().get(i+1);
+        for(int i = 0; i < _rutaPuntosSize-1;i++){
+            Point _p1 , _p2;
+            _p1 = _ruta.get_puntos().get(i);
+            _p2 = _ruta.get_puntos().get(i+1);
 
-            canvas.drawLine(p1.x,p1.y,p2.x,p2.y,paint);
-            if ( seleccionNodoEliminar == i){
-                dibujarPunto(p1,i+1,canvas,true);
+            canvas.drawLine(_p1.x,_p1.y,_p2.x,_p2.y,_paint);
+            if ( _seleccionNodoEliminar == i){
+                dibujarPunto(_p1,i+1,canvas,true);
             }
             else{
-                dibujarPunto(p1,i+1,canvas,false);
+                dibujarPunto(_p1,i+1,canvas,false);
             }
 
 
-            if (i == rutaPuntosSize-2)
+            if (i == _rutaPuntosSize-2)
             {
 
-                if ( seleccionNodoEliminar == i+1){
-                    dibujarPunto(p2,i+2,canvas,true);
+                if ( _seleccionNodoEliminar == i+1){
+                    dibujarPunto(_p2,i+2,canvas,true);
                 }
                 else{
-                    dibujarPunto(p2,i+2,canvas,false);
+                    dibujarPunto(_p2,i+2,canvas,false);
                 }
             }
         }
@@ -114,53 +106,53 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     public Point seleccionarPunto()
     {
-        Point p = null;
-        for(int i = 0; i< ruta.get_puntos().size(); i++){
-            if (ruta.get_puntos().get(i).x -radioPunto < touchX &&
-               (ruta.get_puntos().get(i).x + radioPunto) > touchX &&
-                ruta.get_puntos().get(i).y -radioPunto < touchY &&
-               (ruta.get_puntos().get(i).y + radioPunto) > touchY )
+        Point _p = null;
+        for(int i = 0; i< _ruta.get_puntos().size(); i++){
+            if (_ruta.get_puntos().get(i).x - _radioPunto < _touchX &&
+               (_ruta.get_puntos().get(i).x + _radioPunto) > _touchX &&
+                _ruta.get_puntos().get(i).y - _radioPunto < _touchY &&
+               (_ruta.get_puntos().get(i).y + _radioPunto) > _touchY)
             {
-                p = ruta.get_puntos().get(i);
+                _p = _ruta.get_puntos().get(i);
 
             }
         }
-        return  p;
+        return  _p;
     }
 
     public int seleccionarPuntoPosicion()
     {
-        int p = -1;
-        for(int i = 0; i< ruta.get_puntos().size(); i++){
-            if (ruta.get_puntos().get(i).x -radioPunto < touchX &&
-                    (ruta.get_puntos().get(i).x + radioPunto) > touchX &&
-                    ruta.get_puntos().get(i).y -radioPunto < touchY &&
-                    (ruta.get_puntos().get(i).y + radioPunto) > touchY )
+        int _p = -1;
+        for(int i = 0; i< _ruta.get_puntos().size(); i++){
+            if (_ruta.get_puntos().get(i).x - _radioPunto < _touchX &&
+                    (_ruta.get_puntos().get(i).x + _radioPunto) > _touchX &&
+                    _ruta.get_puntos().get(i).y - _radioPunto < _touchY &&
+                    (_ruta.get_puntos().get(i).y + _radioPunto) > _touchY)
             {
-                p = i;
+                _p = i;
 
             }
         }
-        return  p;
+        return  _p;
     }
 
     private void dibujarPunto(Point point, int numero , Canvas canvas, boolean eliminar)
     {
 
-        Paint p = new Paint();
-        int textoSize = 40;
-        p.setColor(Color.BLACK);
-        p.setStyle(Paint.Style.STROKE);
-        canvas.drawCircle(point.x, point.y, radioPunto, p);
-        p.setStyle(Paint.Style.FILL);
+        Paint _p = new Paint();
+        int _textoSize = 40;
+        _p.setColor(Color.BLACK);
+        _p.setStyle(Paint.Style.STROKE);
+        canvas.drawCircle(point.x, point.y, _radioPunto, _p);
+        _p.setStyle(Paint.Style.FILL);
         if (eliminar)
-            p.setColor(Color.RED);
+            _p.setColor(Color.RED);
         else
-            p.setColor(Color.WHITE);
-        canvas.drawCircle(point.x, point.y, radioPunto - 2, p);
-        p.setColor(Color.BLACK);
-        p.setTextSize(textoSize);
-        canvas.drawText(Integer.toString(numero),point.x-textoSize/2,point.y + textoSize/2,p);
+            _p.setColor(Color.WHITE);
+        canvas.drawCircle(point.x, point.y, _radioPunto - 2, _p);
+        _p.setColor(Color.BLACK);
+        _p.setTextSize(_textoSize);
+        canvas.drawText(Integer.toString(numero),point.x-_textoSize/2,point.y + _textoSize/2,_p);
     }
 
 
@@ -169,9 +161,9 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public void surfaceCreated(SurfaceHolder holder)
     {
         // TODO Auto-generated method stub
-        this.thread = new MySurfaceThread(getHolder(),this);
-        this.thread.setRuning(true);
-        this.thread.start();
+        this._thread = new MySurfaceThread(getHolder(),this);
+        this._thread.setRuning(true);
+        this._thread.start();
 
     }
 
@@ -187,22 +179,22 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
         boolean retry = true;
         //el hilo se detendra.
-        this.thread.setRuning(false);
+        this._thread.setRuning(false);
         while(retry)
         {
             try
             {
-                this.thread.join();
+                this._thread.join();
                 retry=false;
             }
             catch (InterruptedException e){}
         }
     }
 
-    public void setRutaActivity(RutaActivity ruta)
+    public void set_rutaActivity(RutaActivity ruta)
     {
         try {
-            this.rutaActivity = ruta;
+            this._rutaActivity = ruta;
         }
         catch (Exception e){}
     }
@@ -226,93 +218,75 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     //Inicialisa el canvas
     public void iniCanvas(Canvas canvas){
         canvas.drawColor(Color.WHITE);
-        ancho = canvas.getWidth();
-        alto = canvas.getHeight();
+        _ancho = canvas.getWidth();
+        _alto = canvas.getHeight();
         cuadriculaCanvas(canvas);
 
     }
 
     public void cuadriculaCanvas(Canvas canvas){
-        Paint paint = new Paint();
-        paint.setStrokeWidth(escala*3);
-        paint.setColor(Color.BLACK);
-        canvas.drawLine(0,0,ancho,0,paint);
-        canvas.drawLine(0,0,0,alto,paint);
-        canvas.drawLine(0,alto,ancho,alto,paint);
-        canvas.drawLine(ancho,0,ancho,alto,paint);
+        Paint _paint = new Paint();
+        _paint.setStrokeWidth(_escala * 3);
+        _paint.setColor(Color.BLACK);
+        canvas.drawLine(0,0, _ancho,0,_paint);
+        canvas.drawLine(0,0,0, _alto,_paint);
+        canvas.drawLine(0, _alto, _ancho, _alto,_paint);
+        canvas.drawLine(_ancho,0, _ancho, _alto,_paint);
 
 
-        paint.setColor(Color.GRAY);
-        paint.setStrokeWidth(7);
+        _paint.setColor(Color.GRAY);
+        _paint.setStrokeWidth(7);
 
-        for(int i=0; i<= ancho || i <= alto; i+=150)
+        for(int i=0; i<= _ancho || i <= _alto; i+=150)
         {
 
 
-            if(i<ancho) {
-                canvas.drawLine(i, 0, i, alto, paint);
+            if(i< _ancho) {
+                canvas.drawLine(i, 0, i, _alto, _paint);
             }
-            if(i<alto) {
-                canvas.drawLine(0, i, ancho, i, paint);
+            if(i< _alto) {
+                canvas.drawLine(0, i, _ancho, i, _paint);
             }
         }
 
     }
 
-    public String getAccionActual() {
-        return accionActual;
-    }
-
-    public void setAccionActual(String accionActual) {
-        this.accionActual = accionActual;
+    public void set_accionActual(String _accionActual) {
+        this._accionActual = _accionActual;
 
     }
 
     public void reinicioTouch(){
-        touchX = -1;
-        touchY = -1;
-        seleccionNodoEliminar = -1;
+        _touchX = -1;
+        _touchY = -1;
+        _seleccionNodoEliminar = -1;
     }
 
 
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        touchX = event.getX();
-        touchY = event.getY();
-        switch (accionActual) {
+        _touchX = event.getX();
+        _touchY = event.getY();
+        switch (_accionActual) {
             case "AgregarNodo":
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
 
-                        if(ruta.get_puntos().size()==0)
+                        if(_ruta.get_puntos().size()==0)
                         {
 
-                            ruta.agregarPunto(touchX,touchY);
+                            _ruta.agregarPunto(_touchX, _touchY);
                         }
-
-
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        //canvas.drawLine(ruta.getUltimoPunto().x, ruta.getUltimoPunto().y, touchX, touchY, paint);
-
-
-
-
                         break;
                     case MotionEvent.ACTION_UP:
-                        //canvas.drawLine(ruta.getUltimoPunto().x, ruta.getUltimoPunto().y, touchX, touchY, paint);
-
-
-
-                        if(ruta.get_puntos().size()==0)
+                        if(_ruta.get_puntos().size()==0)
                         {
-                            ruta.agregarPunto(touchX,touchY);
+                            _ruta.agregarPunto(_touchX, _touchY);
                         }
-
-
-                        ruta.agregarPunto(touchX,touchY);
-
+                        _ruta.agregarPunto(_touchX, _touchY);
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         break;
@@ -324,11 +298,11 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN://cuando se toca la pantalla
-                        puntoSelecionado = seleccionarPunto();
+                        _puntoSelecionado = seleccionarPunto();
                     case MotionEvent.ACTION_MOVE://cuando se desplaza el dedo por la pantalla
-                        if (puntoSelecionado != null) {
-                            puntoSelecionado.x = (int) touchX;
-                            puntoSelecionado.y = (int) touchY;
+                        if (_puntoSelecionado != null) {
+                            _puntoSelecionado.x = (int) _touchX;
+                            _puntoSelecionado.y = (int) _touchY;
                         }
                         break;
                     case MotionEvent.ACTION_UP://cuando levantamos el dedo de la pantalla
@@ -343,15 +317,15 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
             case "EliminarNodo":
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN://cuando se toca la pantalla
-                        if (seleccionNodoEliminar == seleccionarPuntoPosicion())
+                        if (_seleccionNodoEliminar == seleccionarPuntoPosicion())
                         {
-                            ruta.eliminarPunto(seleccionNodoEliminar);
-                            if(ruta.get_puntos().size() == 1)
-                                ruta.eliminarPunto(0);
-                            seleccionNodoEliminar =-1;
+                            _ruta.eliminarPunto(_seleccionNodoEliminar);
+                            if(_ruta.get_puntos().size() == 1)
+                                _ruta.eliminarPunto(0);
+                            _seleccionNodoEliminar =-1;
                         }
                         else{
-                            seleccionNodoEliminar = seleccionarPuntoPosicion();
+                            _seleccionNodoEliminar = seleccionarPuntoPosicion();
                         }
                         break;
                     case MotionEvent.ACTION_MOVE://cuando se desplaza el dedo por la pantalla

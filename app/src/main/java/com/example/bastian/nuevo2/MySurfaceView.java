@@ -11,6 +11,7 @@ import android.view.SurfaceView;
 
 /**
  * Created by Bastian on 28-04-2015.
+ * surface para la vista del video
  */
 public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 {
@@ -65,7 +66,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceDestroyed(SurfaceHolder holder)
     {
         //Cuando se produce en onBackPressed detiene el hilo de ejecucion.
-        Comunicador.setCamara(false);
+        Comunicador.setCAMARA(false);
         boolean retry = true;
         //el hilo se detendra.
         this._thread.setRuning(false);

@@ -12,9 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,12 +27,12 @@ import java.util.List;
 
 public class GaleriaActivity extends FragmentActivity {
 
-    DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
-    ViewPager mViewPager;
-    private List<String> myList;
-    private static List<Bitmap> imagenes;
+    DemoCollectionPagerAdapter _mDemoCollectionPagerAdapter;
+    ViewPager _mViewPager;
+    private List<String> _lista;
+    private static List<Bitmap> _imagenes;
 
-    /** Este mŽtodo es llamado cuando la actividad es creada */
+    /** Este metodo es llamado cuando la actividad es creada */
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -44,37 +41,37 @@ public class GaleriaActivity extends FragmentActivity {
         setContentView(R.layout.activity_galeria);
 
 
-        myList = new ArrayList<String>();
-        imagenes= new ArrayList<Bitmap>();
-        File filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        String root_sd = Environment.getExternalStorageDirectory().toString();
-        File file = new File(filepath.getAbsolutePath()+"/Robotino");
-        File list[] = file.listFiles();
+        _lista = new ArrayList<String>();
+        _imagenes = new ArrayList<Bitmap>();
+        File _filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        String _root_sd = Environment.getExternalStorageDirectory().toString();
+        File _file = new File(_filepath.getAbsolutePath()+"/Robotino");
+        File _list[] = _file.listFiles();
 
-        File imag;
-        BitmapFactory.Options bit;
-        Bitmap bit2;
-        for( int i=0; i< list.length; i++)
+        File _imag;
+        BitmapFactory.Options _bit;
+        Bitmap _bit2;
+        for( int i=0; i< _list.length; i++)
         {
-            imag= null;
-            imag= new File(filepath.getAbsolutePath()+"/Robotino",list[i].getName());
-            bit = new BitmapFactory.Options();
-            bit2 = BitmapFactory.decodeFile(imag.getAbsolutePath(),bit);
-            bit2 = Bitmap.createScaledBitmap(bit2, 200, 200, true);
-            imagenes.add(bit2);
-            myList.add( filepath.getAbsolutePath()+"/Robotino/"+list[i].getName() );
+            _imag= null;
+            _imag= new File(_filepath.getAbsolutePath()+"/Robotino",_list[i].getName());
+            _bit = new BitmapFactory.Options();
+            _bit2 = BitmapFactory.decodeFile(_imag.getAbsolutePath(),_bit);
+            _bit2 = Bitmap.createScaledBitmap(_bit2, 200, 200, true);
+            _imagenes.add(_bit2);
+            _lista.add(_filepath.getAbsolutePath() + "/Robotino/" + _list[i].getName());
 
-            Log.e("archivo = ", "" + myList.get(i));
+            Log.e("archivo = ", "" + _lista.get(i));
         }
 
 
 
 
-        mDemoCollectionPagerAdapter =
+        _mDemoCollectionPagerAdapter =
                 new DemoCollectionPagerAdapter(
                         getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mDemoCollectionPagerAdapter);
+        _mViewPager = (ViewPager) findViewById(R.id.pager);
+        _mViewPager.setAdapter(_mDemoCollectionPagerAdapter);
 
     }
 
@@ -134,14 +131,14 @@ public class GaleriaActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int i) {
-            Fragment fragment = new DemoObjectFragment();
-            Bundle args = new Bundle();
+            Fragment _fragment = new DemoObjectFragment();
+            Bundle _args = new Bundle();
 
             // Our object is just an integer :-P
-            args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
-            fragment.setArguments(args);
+            _args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
+            _fragment.setArguments(_args);
 
-            return fragment;
+            return _fragment;
         }
 
         /*
@@ -149,7 +146,7 @@ public class GaleriaActivity extends FragmentActivity {
          */
         @Override
         public int getCount() {
-            return imagenes.size()-1;
+            return _imagenes.size()-1;
         }
 
         @Override
@@ -164,20 +161,18 @@ public class GaleriaActivity extends FragmentActivity {
         @Override
         public View onCreateView(LayoutInflater inflater,
                                  ViewGroup container, Bundle savedInstanceState) {
-            // The last two arguments ensure LayoutParams are inflated
-            // properly.
-            //imagenes=;
-            View rootView = inflater.inflate(
+
+            View _rootView = inflater.inflate(
                     R.layout.item_collection, container, false);
             Bundle args = getArguments();
-            ((ImageView) rootView.findViewById(android.R.id.text1)).setImageBitmap(
-                    imagenes.get(args.getInt(ARG_OBJECT)));
-            return rootView;
+            ((ImageView) _rootView.findViewById(android.R.id.text1)).setImageBitmap(
+                    _imagenes.get(args.getInt(ARG_OBJECT)));
+            return _rootView;
         }
 
         public static void setImagenes(List<Bitmap> img)
         {
-            imagenes= img;
+            _imagenes = img;
         }
     }
 }

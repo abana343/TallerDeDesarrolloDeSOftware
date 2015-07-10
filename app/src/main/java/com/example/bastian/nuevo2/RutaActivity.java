@@ -51,7 +51,7 @@ public class RutaActivity extends Activity{
 
         try {
             surfaceView = (RutaSurfaceView) findViewById(R.id.rutaSurfaceView);
-            surfaceView.setRutaActivity(this);
+            surfaceView.set_rutaActivity(this);
 
         }
         catch (Exception e){}
@@ -68,14 +68,14 @@ public class RutaActivity extends Activity{
                 if(!rutaEjecutada) {
                     button.setSelected(!button.isSelected());
                     if (button.isSelected()) {
-                        surfaceView.setAccionActual("AgregarNodo");
+                        surfaceView.set_accionActual("AgregarNodo");
                         botonEliminarNodo.setChecked(false);
                         botonEliminarNodo.setSelected(false);
                         botonEditarNodo.setChecked(false);
                         botonEditarNodo.setSelected(false);
 
                     } else {
-                        surfaceView.setAccionActual("ninguna");
+                        surfaceView.set_accionActual("ninguna");
                         botonEliminarNodo.setChecked(false);
                         botonEditarNodo.setChecked(false);
                     }
@@ -95,13 +95,13 @@ public class RutaActivity extends Activity{
                     button.setSelected(!button.isSelected());
 
                     if (button.isSelected()) {
-                        surfaceView.setAccionActual("EditarNodo");
+                        surfaceView.set_accionActual("EditarNodo");
                         botonEliminarNodo.setChecked(false);
                         botonEliminarNodo.setSelected(false);
                         botonAgregarNodo.setChecked(false);
                         botonAgregarNodo.setSelected(false);
                     } else {
-                        surfaceView.setAccionActual("ninguna");
+                        surfaceView.set_accionActual("ninguna");
                         botonEliminarNodo.setChecked(false);
                         botonAgregarNodo.setChecked(false);
                     }
@@ -119,13 +119,13 @@ public class RutaActivity extends Activity{
                     button.setSelected(!button.isSelected());
 
                     if (button.isSelected()) {
-                        surfaceView.setAccionActual("EliminarNodo");
+                        surfaceView.set_accionActual("EliminarNodo");
                         botonEditarNodo.setChecked(false);
                         botonEditarNodo.setSelected(false);
                         botonAgregarNodo.setChecked(false);
                         botonAgregarNodo.setSelected(false);
                     } else {
-                        surfaceView.setAccionActual("ninguna");
+                        surfaceView.set_accionActual("ninguna");
                         botonEditarNodo.setChecked(false);
                         botonAgregarNodo.setChecked(false);
                     }
@@ -139,7 +139,7 @@ public class RutaActivity extends Activity{
             @Override
             public void onClick(View button) {
 
-                if (surfaceView.ruta.get_puntos().size() == 0) {
+                if (surfaceView._ruta.get_puntos().size() == 0) {
                     Toast.makeText(context, "Agrega puntos a la ruta", Toast.LENGTH_SHORT).show();
                 } else {
                     if(Comunicador.isESTADO_SERVICIO()){
@@ -158,9 +158,9 @@ public class RutaActivity extends Activity{
                         if (button.isSelected() && !rutaEjecutada) {
 
 
-                            String listaPuntos = "" + surfaceView.ruta.get_nombre() + "-";
-                            for (int i = 0; i < surfaceView.ruta.get_puntos().size(); i++) {
-                                listaPuntos += "(" + surfaceView.ruta.get_puntos().get(i).x + "," + surfaceView.ruta.get_puntos().get(i).y + ")-";
+                            String listaPuntos = "" + surfaceView._ruta.get_nombre() + "-";
+                            for (int i = 0; i < surfaceView._ruta.get_puntos().size(); i++) {
+                                listaPuntos += "(" + surfaceView._ruta.get_puntos().get(i).x + "," + surfaceView._ruta.get_puntos().get(i).y + ")-";
                             }
                             EditText escalaText = (EditText) findViewById(R.id.escala);
                             int escala = Integer.parseInt(escalaText.getText().toString()) * 10;
@@ -192,7 +192,7 @@ public class RutaActivity extends Activity{
             }
         });
 
-        editTextEscala.setText(""+surfaceView.ruta.get_escala());
+        editTextEscala.setText(""+surfaceView._ruta.get_escala());
 
     }
 
@@ -248,7 +248,7 @@ public class RutaActivity extends Activity{
 
     public void onClickButtonGuardarRuta2(View view){
         if(!rutaEjecutada){
-            if(surfaceView.ruta.get_puntos().size()==0){
+            if(surfaceView._ruta.get_puntos().size()==0){
                 Toast.makeText(this.context, "Agrega puntos  a rutaActivity", Toast.LENGTH_SHORT).show();
             }
             else {
@@ -259,7 +259,7 @@ public class RutaActivity extends Activity{
 
                 // set the custom dialog components - text, image and button
                 final EditText text = (EditText) dialog.findViewById(R.id.editTextNombreRuta);
-                text.setText(surfaceView.ruta.get_nombre());
+                text.setText(surfaceView._ruta.get_nombre());
 
                 Button dialogButtonCancelar = (Button) dialog.findViewById(R.id.dialogButtonCancelar);
                 // if button is clicked, close the custom dialog
@@ -280,8 +280,8 @@ public class RutaActivity extends Activity{
 
                             /*
                             String listaPuntos = "" + text.getText() + "-";
-                            for (int i = 0; i < surfaceView.ruta.get_puntos().size(); i++) {
-                                listaPuntos += "(" + surfaceView.ruta.get_puntos().get(i).x + "," + surfaceView.ruta.get_puntos().get(i).y + ")-";
+                            for (int i = 0; i < surfaceView._ruta.get_puntos().size(); i++) {
+                                listaPuntos += "(" + surfaceView._ruta.get_puntos().get(i).x + "," + surfaceView._ruta.get_puntos().get(i).y + ")-";
                             }
                             EditText escalaText = (EditText) findViewById(R.id._escala);
                             int _escala = Integer.parseInt(escalaText.getText().toString());
@@ -300,13 +300,13 @@ public class RutaActivity extends Activity{
                             */                    //DAtos para guardar en WS
                             EditText escalaText = (EditText) findViewById(R.id.escala);
                             int escala = Integer.parseInt(escalaText.getText().toString());
-                            surfaceView.ruta.set_escala(escala);
-                            surfaceView.ruta.set_nombre(text.getText().toString());
-                            if (surfaceView.ruta.get_ID() == -1) {
-                                Comunicador.getBaseDatoRuta().InsertarRuta(surfaceView.ruta);
+                            surfaceView._ruta.set_escala(escala);
+                            surfaceView._ruta.set_nombre(text.getText().toString());
+                            if (surfaceView._ruta.get_ID() == -1) {
+                                Comunicador.getBASE_DATO_RUTA().InsertarRuta(surfaceView._ruta);
                                 Toast.makeText(context, "Ruta guardada", Toast.LENGTH_SHORT).show();
                             } else {
-                                Comunicador.getBaseDatoRuta().editarRuta(surfaceView.ruta);
+                                Comunicador.getBASE_DATO_RUTA().editarRuta(surfaceView._ruta);
                                 Toast.makeText(context, "Ruta editada", Toast.LENGTH_SHORT).show();
 
                             }
@@ -360,7 +360,7 @@ public class RutaActivity extends Activity{
 
     public void ejecutaRuta(final String nombre)
     {
-        String server = Comunicador.getIpWebService();
+        String server = Comunicador.getIP_WEB_SERVICE();
 
         final String URL = "http://" + server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
         final String METHOD_NAME = "ejecutarRuta";
@@ -420,7 +420,7 @@ public class RutaActivity extends Activity{
 
     private void cancelarEjecucion(){
 
-        String server = Comunicador.getIpWebService();
+        String server = Comunicador.getIP_WEB_SERVICE();
 
         final String URL = "http://" + server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
         final String METHOD_NAME = "abortarEjecucionRuta";
@@ -469,7 +469,7 @@ public class RutaActivity extends Activity{
         botonAgregarNodo.setSelected(false);
         botonEliminarNodo.setChecked(false);
         botonEliminarNodo.setSelected(false);
-        surfaceView.setAccionActual("ninguna");
+        surfaceView.set_accionActual("ninguna");
         surfaceView.reinicioTouch();
         rutaEjecutada = true;
 
@@ -488,7 +488,7 @@ public class RutaActivity extends Activity{
 
 
     private void preguntaRobotEjecutando(){
-        String server = Comunicador.getIpWebService();
+        String server = Comunicador.getIP_WEB_SERVICE();
 
         final String URL = "http://" + server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
         final String METHOD_NAME = "ejecutandoRuta";

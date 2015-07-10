@@ -20,10 +20,6 @@ public class ListarRutaActivity extends Activity {
 
     private ListView _listViewRutas;
     private List<Ruta> _lista;
-    private String _respuestaWS;
-
-    private Boolean _esperandoThread = true;
-
 
 
     private ListaRutaAdapter _adapterRuta;
@@ -33,7 +29,6 @@ public class ListarRutaActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listar_ruta);
 
-        _respuestaWS = "error";
 
 
         this._listViewRutas = (ListView) findViewById(R.id.listViewRutas);
@@ -77,7 +72,7 @@ public class ListarRutaActivity extends Activity {
     }
 
     public List<Ruta> cargarRutaInterna(){
-        return Comunicador.getBaseDatoRuta().getRutas();
+        return Comunicador.getBASE_DATO_RUTA().getRutas();
     }
 
 
@@ -148,7 +143,7 @@ public class ListarRutaActivity extends Activity {
                 }
             }
 
-            Comunicador.getBaseDatoRuta().eliminarRuta(_lista.get(_resultado).get_ID());
+            Comunicador.getBASE_DATO_RUTA().eliminarRuta(_lista.get(_resultado).get_ID());
             _lista = cargarRutaInterna();
             _adapterRuta.setdatos(_lista);
 
@@ -172,7 +167,7 @@ public class ListarRutaActivity extends Activity {
 
                 }
             }
-            Comunicador.getBaseDatoRuta().cargarPuntosARuta(_lista.get(resultado));
+            Comunicador.getBASE_DATO_RUTA().cargarPuntosARuta(_lista.get(resultado));
             Comunicador.setObjeto(_lista.get(resultado));
             Intent i = new Intent(this, RutaActivity.class);
             startActivity(i);

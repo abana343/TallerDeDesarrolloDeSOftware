@@ -52,7 +52,7 @@ public class MainActivity extends Activity {
         editTextPuertoWS.setText(Comunicador.getPUERTO());
 
         baseDato = new BaseDatoRuta(this);
-        Comunicador.setBaseDatoRuta(baseDato);
+        Comunicador.setBASE_DATO_RUTA(baseDato);
     }
 
 
@@ -152,8 +152,8 @@ public class MainActivity extends Activity {
 
                     }
                 });
-                Comunicador.setIpRobotino(hostname);
-                Comunicador.setIpWebService(server);
+                Comunicador.setIP_ROBOTINO(hostname);
+                Comunicador.setIP_WEB_SERVICE(server);
             }
         };
 
@@ -225,14 +225,14 @@ public class MainActivity extends Activity {
 
     public void clasico(View view)
     {
-        Comunicador.setMovimiento(1);
+        Comunicador.setMOVIMIENTO(1);
         this.onClickButtonIrMovimiento(view);
 
     }
 
     public void tactil(View view)
     {
-        Comunicador.setMovimiento(2);
+        Comunicador.setMOVIMIENTO(2);
         this.onClickButtonIrMovimiento(view);
     }
 }
