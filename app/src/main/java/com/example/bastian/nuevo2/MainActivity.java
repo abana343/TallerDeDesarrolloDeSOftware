@@ -219,7 +219,7 @@ public class MainActivity extends Activity {
     }
 
     public void onClickButtonPruebaRutaSurface(View view){
-        Intent i = new Intent(this, RutaActivity2.class);
+        Intent i = new Intent(this, RutaActivity.class);
         startActivity(i);
     }
 

@@ -6,7 +6,7 @@ package com.example.bastian.nuevo2.DB;
 public class TablaRuta {
     public static final String TABLE_NAME = "ruta";
     public static final String FIELD_ID = "id";
-    public static final String FIELD_ESCALA = "escala";
+    public static final String FIELD_ESCALA = "_escala";
     public static final String FIELD_NOMBRE_RUTA = "nombreRuta";
     public static final String CREATE_DB_TABLE = "create table " + TABLE_NAME + "(" +
             FIELD_ID + " integer primary key AUTOINCREMENT not null ," +

@@ -57,11 +57,11 @@ public class ListaRutaAdapter extends BaseAdapter {
         Ruta ruta = rutas.get(position);
 
 
-        //nombre rutaActivity
-        nombre.setText(ruta.nombre);
+        //_nombre rutaActivity
+        nombre.setText(ruta._nombre);
 
         //puntos rutaActivity
-        puntos.setText("Puntos: " + ruta.getPuntos().size());
+        puntos.setText("Puntos: " + ruta.get_puntos().size());
 
         //distancia recorrida
         double distanciaRecorrida = ruta.distanciaTotal();

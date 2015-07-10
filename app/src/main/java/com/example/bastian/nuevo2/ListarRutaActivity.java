@@ -197,7 +197,7 @@ public class ListarRutaActivity extends Activity {
 
     public void onClickButtonIrRuta(View view){
         Comunicador.setObjeto(null);
-        Intent i = new Intent(this, RutaActivity2.class);
+        Intent i = new Intent(this, RutaActivity.class);
         startActivity(i);
 
     }
@@ -299,7 +299,7 @@ public class ListarRutaActivity extends Activity {
     {
 
         List<Ruta> rutas = new ArrayList<>();
-        //generamos las rutas sin puntos con los parametros ID, escala y nombre
+        //generamos las rutas sin puntos con los parametros ID, _escala y nommbre
         String rutasCadena[] = respuestaWS.split("<->");
         for(int i = 0 ; i< rutasCadena.length;i++){
             String rutaDatos[] = rutasCadena[i].split(",");
@@ -333,7 +333,7 @@ public class ListarRutaActivity extends Activity {
                 }
             }
 
-            Comunicador.getBaseDatoRuta().eliminarRuta(list.get(resultado).getID());
+            Comunicador.getBaseDatoRuta().eliminarRuta(list.get(resultado).get_ID());
             list = cargarRutaInterna();
             adapterRuta.setdatos(list);
 
@@ -359,42 +359,12 @@ public class ListarRutaActivity extends Activity {
             }
             Comunicador.getBaseDatoRuta().cargarPuntosARuta(list.get(resultado));
             Comunicador.setObjeto(list.get(resultado));
-            Intent i = new Intent(this, RutaActivity2.class);
-            startActivity(i);
-
-        }
-
-    }
-
-
-    public void onClickButtonCargarRuta(View view){
-
-
-
-
-        int posicion = (Integer)view.getTag();
-        respuestaWS = "error";
-        cargarRuta(Integer.toString(list.get(posicion).getID()));
-        while(esperandoThread){}
-        esperandoThread=true;
-
-        if(!respuestaWS.equals("error")) {
-            if(list.get(posicion).getPuntos().size()==0) {
-                String puntosRuta[] = respuestaWS.split("-");
-                for (int j = 0; j < puntosRuta.length; j++) {
-                    String punto[] = puntosRuta[j].split(",");
-
-                    list.get(posicion).agregarPunto(Float.parseFloat(punto[0]), Float.parseFloat(punto[1]));
-                }
-            }
-            Comunicador.setObjeto(list.get(posicion));
             Intent i = new Intent(this, RutaActivity.class);
             startActivity(i);
+
         }
 
-
-
-
-
     }
+
+
 }

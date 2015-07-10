@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="10"
-            android:id="@+id/escala"
+            android:id="@+id/_escala"
             android:layout_row="0"
             android:layout_column="17"
             android:text="50"

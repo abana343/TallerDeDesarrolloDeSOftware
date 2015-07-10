@@ -1,27 +1,21 @@
 package com.example.bastian.nuevo2;
 
 import android.app.Activity;
-
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
-
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Display;
-
-
-import android.view.MotionEvent;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-
-
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
+
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -33,329 +27,298 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 
 
-public class RutaActivity extends Activity implements View.OnTouchListener {
-    ImageView imageView;
-    Bitmap bitmap;
-    Canvas canvas;
-    Paint paint;
-    float downx = 0, downy = 0, upx = 0, upy = 0;
+public class RutaActivity extends Activity{
+    RutaSurfaceView surfaceView;
+
+    ToggleButton botonAgregarNodo;
+    ToggleButton botonEditarNodo;
+    ToggleButton botonEliminarNodo;
+    ToggleButton botonEjecutar;
+    EditText editTextEscala;
 
 
-   // private ListView listView;
-
-    //
-    private Ruta ruta;
-    private int editarPunto;
-
-
-
-    //
     final Context context = this;
-    //
     private String respuestaServidor = "";
-    private Boolean esperandoThread = true;
+    private String ejecucionRuta= "";
+    private boolean esperandoThread = true;
+    private boolean rutaEjecutada = false;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ruta);
+        setContentView(R.layout.activity_ruta2);
 
-        imageView = (ImageView) this.findViewById(R.id.imageView);
-        //Carga rutaActivity
-        ruta = (Ruta)Comunicador.getObjeto();
-        if (ruta == null)
-        {
-            //Si no existe rutaActivity guardada crea una nueva
-            ruta = new Ruta();
+
+        try {
+            surfaceView = (RutaSurfaceView) findViewById(R.id.rutaSurfaceView);
+            surfaceView.setRutaActivity(this);
+
         }
-        else{
-            //inicialisa los campos de rutaActivity
-            Point ultimoPunto = ruta.getPuntos().get(ruta.getPuntos().size()-1);
-            downx = ultimoPunto.x;
-            downy = ultimoPunto.y;
-            upx = ultimoPunto.x;
-            upy = ultimoPunto.y;
-        }
+        catch (Exception e){}
 
-        inicializarImageView();
-        imageView.setOnTouchListener(this);
-        //this.listView = (ListView) findViewById(R.id.listView);
+        botonAgregarNodo = (ToggleButton) findViewById(R.id.imageButtonAgregarNodo);
+        botonEditarNodo = (ToggleButton) findViewById(R.id.imageButtonEditarNodo);
+        botonEliminarNodo = (ToggleButton) findViewById(R.id.imageButtonEliminarNodo);
+        botonEjecutar = (ToggleButton) findViewById(R.id.buttonRun);
+        editTextEscala = (EditText) findViewById(R.id.escala);
+
+        botonAgregarNodo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View button) {
+                if(!rutaEjecutada) {
+                    button.setSelected(!button.isSelected());
+                    if (button.isSelected()) {
+                        surfaceView.setAccionActual("AgregarNodo");
+                        botonEliminarNodo.setChecked(false);
+                        botonEliminarNodo.setSelected(false);
+                        botonEditarNodo.setChecked(false);
+                        botonEditarNodo.setSelected(false);
+
+                    } else {
+                        surfaceView.setAccionActual("ninguna");
+                        botonEliminarNodo.setChecked(false);
+                        botonEditarNodo.setChecked(false);
+                    }
+                    surfaceView.reinicioTouch();
+                }
+            }
+        });
 
 
 
 
 
-        //this.listView.setAdapter(new RutaAdapter(this,rutaActivity.getLista()));
+        botonEditarNodo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View button) {
+                if(!rutaEjecutada) {
+                    button.setSelected(!button.isSelected());
+
+                    if (button.isSelected()) {
+                        surfaceView.setAccionActual("EditarNodo");
+                        botonEliminarNodo.setChecked(false);
+                        botonEliminarNodo.setSelected(false);
+                        botonAgregarNodo.setChecked(false);
+                        botonAgregarNodo.setSelected(false);
+                    } else {
+                        surfaceView.setAccionActual("ninguna");
+                        botonEliminarNodo.setChecked(false);
+                        botonAgregarNodo.setChecked(false);
+                    }
+                    surfaceView.reinicioTouch();
+                }
+            }
+        });
+
+        botonEliminarNodo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View button) {
+                if(!rutaEjecutada) {
 
 
-        editarPunto =  -1;
+                    button.setSelected(!button.isSelected());
+
+                    if (button.isSelected()) {
+                        surfaceView.setAccionActual("EliminarNodo");
+                        botonEditarNodo.setChecked(false);
+                        botonEditarNodo.setSelected(false);
+                        botonAgregarNodo.setChecked(false);
+                        botonAgregarNodo.setSelected(false);
+                    } else {
+                        surfaceView.setAccionActual("ninguna");
+                        botonEditarNodo.setChecked(false);
+                        botonAgregarNodo.setChecked(false);
+                    }
+                    surfaceView.reinicioTouch();
+                }
+            }
+        });
+
+
+        botonEjecutar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View button) {
+
+                if (surfaceView.ruta.get_puntos().size() == 0) {
+                    Toast.makeText(context, "Agrega puntos a la ruta", Toast.LENGTH_SHORT).show();
+                } else {
+                    if(Comunicador.isESTADO_SERVICIO()){
+                        esperandoThread = true;
+                        preguntaRobotEjecutando();
+                        while (esperandoThread) {
+                        }
+                        if (respuestaServidor == "si"){
+                            rutaEjecutada = true;
+                        }
+                        else
+                            rutaEjecutada = false;
+
+                        button.setSelected(!button.isSelected());
+
+                        if (button.isSelected() && !rutaEjecutada) {
+
+
+                            String listaPuntos = "" + surfaceView.ruta.get_nombre() + "-";
+                            for (int i = 0; i < surfaceView.ruta.get_puntos().size(); i++) {
+                                listaPuntos += "(" + surfaceView.ruta.get_puntos().get(i).x + "," + surfaceView.ruta.get_puntos().get(i).y + ")-";
+                            }
+                            EditText escalaText = (EditText) findViewById(R.id.escala);
+                            int escala = Integer.parseInt(escalaText.getText().toString()) * 10;
+                            listaPuntos += Integer.toString(escala);
+
+                            esperandoThread = true;
+                            ejecutaRuta(listaPuntos);
+                            bloquearRutaEnEjecucion();
+
+
+
+                            ToggleButton toggleButton = (ToggleButton) findViewById(R.id.buttonRun);
+                            toggleButton.setChecked(true);
+                        }
+                        else{
+                            cancelarEjecucion();
+                            ToggleButton toggleButton = (ToggleButton) findViewById(R.id.buttonRun);
+                            toggleButton.setChecked(false);
+
+                        }
+                    }
+                    else{
+                        Toast.makeText(context, "Comprueba la coneccion", Toast.LENGTH_SHORT).show();
+                        ToggleButton toggleButton = (ToggleButton) findViewById(R.id.buttonRun);
+                        toggleButton.setChecked(!toggleButton.isChecked());
+                    }
+
+                }
+            }
+        });
+
+        editTextEscala.setText(""+surfaceView.ruta.get_escala());
+
     }
 
-    public boolean onTouch(View v, MotionEvent event) {
-        int action = event.getAction();
-
-        if(editarPunto != -1)
-        {
-            Point puntoEditado = ruta.getPuntos().get(editarPunto);
-            inicializarImageView();
-            switch (action){
-                case MotionEvent.ACTION_DOWN:
-                    puntoEditado.x = (int)event.getX();
-                    puntoEditado.y = (int)event.getY();
-                    ruta.getPuntos().set(editarPunto,puntoEditado);
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    puntoEditado.x = (int)event.getX();
-                    puntoEditado.y = (int)event.getY();
-                    ruta.getPuntos().set(editarPunto,puntoEditado);
-                    break;
-                case MotionEvent.ACTION_UP:
-                    puntoEditado.x = (int)event.getX();
-                    puntoEditado.y = (int)event.getY();
-                    ruta.getPuntos().set(editarPunto,puntoEditado);
-                    this.editarPunto = -1;
-                    dibujarRuta();
-                    break;
-            }
-            ruta.actualizarLista();
-            //listView.setAdapter(new RutaAdapter(this, rutaActivity.getLista()));
-
-        }
-
-        else
-        {
-            switch (action) {
-                case MotionEvent.ACTION_DOWN:
-                    inicializarImageView();
-                    if(ruta.getPuntos().size()==0)
-                    {
-                        downx = event.getX();
-                        downy = event.getY();
-                        ruta.agregarPunto(downx,downy);
-                    }
-                    else
-                    {
-                        upx = event.getX();
-                        upy = event.getY();
-                    }
-
-                    dibujarRuta();
-
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    inicializarImageView();
-                    upx = event.getX();
-                    upy = event.getY();
-                    canvas.drawLine(downx, downy, upx, upy, paint);
-
-                    dibujarRuta();
-
-
-                    break;
-                case MotionEvent.ACTION_UP:
-                    canvas.drawLine(downx, downy, upx, upy, paint);
-
-
-                    upx = event.getX();
-                    upy = event.getY();
-                    if(ruta.getPuntos().size()==0)
-                    {
-                        ruta.agregarPunto(downx,downy);
-                    }
-
-                    ruta.imagenView = imageView;
-                    ruta.imagenView.setDrawingCacheEnabled(true);
-                    ruta.bitmap = Bitmap.createBitmap(v.getDrawingCache());
-                    v.destroyDrawingCache();
-                    ruta.canvas =canvas;
-                    ruta.agregarPunto(upx,upy);
-                    //listView.setAdapter(new RutaAdapter(this, rutaActivity.getLista()));
-
-                    downx = upx;
-                    downy = upy;
-                    dibujarRuta();
-                    break;
-                case MotionEvent.ACTION_CANCEL:
-                    break;
-                default:
-                    break;
-            }
-
-        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        /*
+        if (id == R.id.action_conectar) {
+            return true;
+        }
+        */
+        if (id == R.id.action_inicio) {
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_galeria) {
+            Intent i = new Intent(this, GaleriaActivity.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_rutas) {
+            Intent i = new Intent(this, ListarRutaActivity.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_movimiento) {
+            Intent i = new Intent(this, movimiento.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_sensores) {
+            Intent i = new Intent(this, SensoresActivity.class);
+            startActivity(i);
+        }
+        /*
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        */
+        return super.onOptionsItemSelected(item);
+    }
 
 
-    private void dibujarRuta()
-    {
-        for(int i = 0; i < ruta.getPuntos().size()-1;i++){
-            Point p1 , p2;
-            p1 = ruta.getPuntos().get(i);
-            p2 = ruta.getPuntos().get(i+1);
-            canvas.drawLine(p1.x,p1.y,p2.x,p2.y,paint);
 
-            if( i == editarPunto)
-                dibujarPunto(p1,i+1,true);
-            else
-                dibujarPunto(p1,i+1,false);
 
-            if (i == ruta.getPuntos().size()-2)
-            {
-                dibujarPunto(p2,i+2,false);
+    public void onClickButtonGuardarRuta2(View view){
+        if(!rutaEjecutada){
+            if(surfaceView.ruta.get_puntos().size()==0){
+                Toast.makeText(this.context, "Agrega puntos  a rutaActivity", Toast.LENGTH_SHORT).show();
             }
-        }
+            else {
+                // custom dialog
+                final Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.dialog_ruta);
+                dialog.setTitle("Nombre de la ruta");
 
-    }
+                // set the custom dialog components - text, image and button
+                final EditText text = (EditText) dialog.findViewById(R.id.editTextNombreRuta);
+                text.setText(surfaceView.ruta.get_nombre());
 
-    private void dibujarPunto(Point point, int numero , boolean puntoEditado)
-    {
-        int radio = 30;
-        Paint p = new Paint();
-        int textoSize = 40;
-        p.setColor(Color.BLACK);
-        p.setStyle(Paint.Style.STROKE);
-        canvas.drawCircle(point.x, point.y, radio, p);
-        p.setStyle(Paint.Style.FILL);
-        if (puntoEditado)
-            p.setColor(Color.YELLOW);
-        else
-            p.setColor(Color.WHITE);
-        canvas.drawCircle(point.x, point.y, radio - 2, p);
-        p.setColor(Color.BLACK);
-        p.setTextSize(textoSize);
-        canvas.drawText(Integer.toString(numero),point.x-textoSize/2,point.y + textoSize/2,p);
-    }
-
-
-    private void inicializarImageView(){
-        Display display = getWindowManager().getDefaultDisplay();
-
-        Point tam= new Point();
-        display.getSize(tam);
-        int widthPantalla = tam.x;
-        int heightPantalla = tam.y/2;
-
-
-
-
-
-
-        bitmap = Bitmap.createBitmap(widthPantalla,heightPantalla,Bitmap.Config.ARGB_8888);
-
-        canvas = new Canvas(bitmap);
-        paint = new Paint();
-        paint.setColor(Color.GREEN);
-        paint.setStrokeWidth(10);
-        imageView.setImageBitmap(bitmap);
-
-
-
-        paint.setColor(Color.GRAY);
-        paint.setStrokeWidth(7);
-
-        for(int i=0; i<= widthPantalla || i <= heightPantalla; i+=150)
-        {
-
-
-            if(i<widthPantalla) {
-                canvas.drawLine(i, 0, i, heightPantalla, paint);
-            }
-            if(i<heightPantalla) {
-                canvas.drawLine(0, i, widthPantalla, i, paint);
-            }
-        }
-        paint.setColor(Color.BLACK);
-        paint.setStrokeWidth(5);
-        dibujarRuta();
-
-
-        EditText escalaText = (EditText)findViewById(R.id.escala);
-        int escala = Integer.parseInt(escalaText.getText().toString());
-        ruta.setDatosPantalla(escala,widthPantalla,heightPantalla);///////////////revisar////////////////////////////////////
-    }
-
-
-
-    public void onClickButtonEliminar(View view){
-        int posicion = (Integer)view.getTag();
-        ruta.eliminarPunto(posicion +1);
-        if (ruta.getPuntos().size() == 1)
-        {
-            ruta.eliminarPunto(0);
-        }
-        //listView.setAdapter(new RutaAdapter(this, rutaActivity.getLista()));
-
-        this.editarPunto = -1;
-        if (posicion+1 == ruta.getPuntos().size()) {
-            downx = ruta.getPuntos().get(posicion).x;
-            downy = ruta.getPuntos().get(posicion).y;
-        }
-        inicializarImageView();
-    }
-
-    public  void onClickButtonEditar(View view){
-        this.editarPunto = (Integer)view.getTag();
-        dibujarRuta();
-
-    }
-
-    public void onClickButtonGuardarRuta(View view){
-
-        if(ruta.getPuntos().size()==0){
-            Toast.makeText(context, "Agrega puntos  a rutaActivity", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            // custom dialog
-            final Dialog dialog = new Dialog(context);
-            dialog.setContentView(R.layout.dialog_ruta);
-            dialog.setTitle("Nombre de la rutaActivity");
-
-            // set the custom dialog components - text, image and button
-            final EditText text = (EditText) dialog.findViewById(R.id.editTextNombreRuta);
-
-
-            Button dialogButtonCancelar = (Button) dialog.findViewById(R.id.dialogButtonCancelar);
-            // if button is clicked, close the custom dialog
-            dialogButtonCancelar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
-
-            Button dialogButtonGuardarRuta = (Button) dialog.findViewById(R.id.dialogButtonGuardar);
-            dialogButtonGuardarRuta.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (text.getText().toString().length() == 0) {
-                        Toast.makeText(context, "Ingresa nombre de rutaActivity", Toast.LENGTH_SHORT).show();
-                    } else {
-
-
-                        String listaPuntos = "" + text.getText() + "-";
-                        for (int i = 0; i < ruta.getPuntos().size(); i++) {
-                            listaPuntos += "(" + ruta.getPuntos().get(i).x + "," + ruta.getPuntos().get(i).y + ")-";
-                        }
-                        EditText escalaText = (EditText) findViewById(R.id.escala);
-                        int escala = Integer.parseInt(escalaText.getText().toString());
-                        listaPuntos += Integer.toString(escala);
-
-                        //System.out.println(listaPuntos);
-                        //Toast.makeText(context, "Guardado", Toast.LENGTH_SHORT).show();
-                        //dialog.dismiss();
-                        GuardarRuta(listaPuntos);
-                        while(esperandoThread)
-                        {
-                        }
-                        Toast.makeText(context, respuestaServidor, Toast.LENGTH_SHORT).show();
+                Button dialogButtonCancelar = (Button) dialog.findViewById(R.id.dialogButtonCancelar);
+                // if button is clicked, close the custom dialog
+                dialogButtonCancelar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         dialog.dismiss();
-
-
                     }
-                }
+                });
 
-            });
-            dialog.show();
+                Button dialogButtonGuardarRuta = (Button) dialog.findViewById(R.id.dialogButtonGuardar);
+                dialogButtonGuardarRuta.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (text.getText().toString().length() == 0) {
+                            Toast.makeText(context, "Ingresa nommbre de ruta", Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            /*
+                            String listaPuntos = "" + text.getText() + "-";
+                            for (int i = 0; i < surfaceView.ruta.get_puntos().size(); i++) {
+                                listaPuntos += "(" + surfaceView.ruta.get_puntos().get(i).x + "," + surfaceView.ruta.get_puntos().get(i).y + ")-";
+                            }
+                            EditText escalaText = (EditText) findViewById(R.id._escala);
+                            int _escala = Integer.parseInt(escalaText.getText().toString());
+                            listaPuntos += Integer.toString(_escala);
+
+                            //System.out.println(listaPuntos);
+                            //Toast.makeText(context, "Guardado", Toast.LENGTH_SHORT).show();
+                            //dialog.dismiss();
+                            GuardarRuta(listaPuntos);
+
+                            while(esperandoThread)
+                            {
+                            }
+                            Toast.makeText(context, respuestaServidor, Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            */                    //DAtos para guardar en WS
+                            EditText escalaText = (EditText) findViewById(R.id.escala);
+                            int escala = Integer.parseInt(escalaText.getText().toString());
+                            surfaceView.ruta.set_escala(escala);
+                            surfaceView.ruta.set_nombre(text.getText().toString());
+                            if (surfaceView.ruta.get_ID() == -1) {
+                                Comunicador.getBaseDatoRuta().InsertarRuta(surfaceView.ruta);
+                                Toast.makeText(context, "Ruta guardada", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Comunicador.getBaseDatoRuta().editarRuta(surfaceView.ruta);
+                                Toast.makeText(context, "Ruta editada", Toast.LENGTH_SHORT).show();
+
+                            }
+
+                            dialog.dismiss();
+
+                        }
+                    }
+
+                });
+                dialog.show();
+            }
         }
 
     }
@@ -363,12 +326,44 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
 
 
 
-    public void GuardarRuta(final String nombre)
+
+
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Salir")
+                    .setMessage("Estás seguro?")
+                    .setNegativeButton(android.R.string.cancel, null)//sin listener
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {//un listener que al pulsar, cierre la aplicacion
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+                            //Salir
+                            finish();
+                        }
+                    })
+                    .show();
+
+            // Si el listener devuelve true, significa que el evento esta procesado, y nadie debe hacer nada mas
+            return true;
+        }
+//para las demas cosas, se reenvia el evento al listener habitual
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+
+    public void ejecutaRuta(final String nombre)
     {
         String server = Comunicador.getIpWebService();
 
-        final String URL = "http://" + server+":8080/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
-        final String METHOD_NAME = "crearRuta";
+        final String URL = "http://" + server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
+        final String METHOD_NAME = "ejecutarRuta";
         final String SOAP_ACTION = Comunicador.NAMESPACE + METHOD_NAME;
 
 
@@ -380,32 +375,163 @@ public class RutaActivity extends Activity implements View.OnTouchListener {
             {
                 SoapObject request = new SoapObject(Comunicador.NAMESPACE,METHOD_NAME);
 
-                request.addProperty("formatoRuta",nombre);
+                request.addProperty("ruta",nombre);
                 //request.addProperty("hostnameIP","172.26.201.3");//el primer argumento es el string que identifica el web param
                 SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                 envelope.setOutputSoapObject(request);
                 HttpTransportSE transportSE = new HttpTransportSE(URL);
                 try {
                     transportSE.call(SOAP_ACTION,envelope);
-                    respuestaServidor = "Ruta Guardada";
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    ejecucionRuta = resultado.toString();
+                    respuestaServidor = "Ruta terminada";
+
                     esperandoThread = false;
+
+
                 } catch (IOException e) {
                     respuestaServidor = "Error conexion";
                     esperandoThread = false;
                     e.printStackTrace();
+
                 } catch (XmlPullParserException e) {
                     respuestaServidor = "Error conexion";
                     esperandoThread = false;
                     e.printStackTrace();
                 }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(ejecucionRuta.equals("ruta ejecutada")) {
+                            terminarEjecucion();
+                            botonEjecutar.setChecked(false);
+                        }
+                    }
+                });
             }
 
-        };
 
+        };
         nt.start();
+
     }
 
 
+    private void cancelarEjecucion(){
 
+        String server = Comunicador.getIpWebService();
+
+        final String URL = "http://" + server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
+        final String METHOD_NAME = "abortarEjecucionRuta";
+        final String SOAP_ACTION = Comunicador.NAMESPACE + METHOD_NAME;
+
+        Thread nt = new Thread()
+        {
+            String respuesta = "Coneccion Fallida";
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(Comunicador.NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuesta = resultado.toString();
+                    terminarEjecucion();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+                esperandoThread = false;
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        nt.start();
+
+    }
+
+
+    private void bloquearRutaEnEjecucion(){
+        botonEditarNodo.setChecked(false);
+        botonEditarNodo.setSelected(false);
+        botonAgregarNodo.setChecked(false);
+        botonAgregarNodo.setSelected(false);
+        botonEliminarNodo.setChecked(false);
+        botonEliminarNodo.setSelected(false);
+        surfaceView.setAccionActual("ninguna");
+        surfaceView.reinicioTouch();
+        rutaEjecutada = true;
+
+        botonAgregarNodo.setClickable(false);
+        botonEditarNodo.setClickable(false);
+        botonEliminarNodo.setClickable(false);
+    }
+
+
+    private void terminarEjecucion(){
+        botonAgregarNodo.setClickable(true);
+        botonEditarNodo.setClickable(true);
+        botonEliminarNodo.setClickable(true);
+        rutaEjecutada = false;
+    }
+
+
+    private void preguntaRobotEjecutando(){
+        String server = Comunicador.getIpWebService();
+
+        final String URL = "http://" + server+":"+Comunicador.getPUERTO()+"/WSR/Servicios";//no sirve localhost si no se usa el emulador propio de androidstudio
+        final String METHOD_NAME = "ejecutandoRuta";
+        final String SOAP_ACTION = Comunicador.NAMESPACE + METHOD_NAME;
+
+        Thread nt = new Thread()
+        {
+            String respuesta = "Coneccion Fallida";
+            @Override
+            public void run()
+            {
+                SoapObject request = new SoapObject(Comunicador.NAMESPACE,METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE transportSE = new HttpTransportSE(URL);
+                try {
+                    transportSE.call(SOAP_ACTION,envelope);
+                    SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
+                    respuesta = resultado.toString();
+                    respuestaServidor = resultado.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    respuestaServidor = "no";
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                    respuestaServidor = "no";
+                }
+                esperandoThread = false;
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(movimiento.this,respuesta,Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+        };
+
+        nt.start();
+
+
+
+    }
 
 }

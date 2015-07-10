@@ -270,7 +270,7 @@ public class movimiento extends Activity {
 
         File dir = new File(filepath.getAbsolutePath()+"/Robotino");
         dir.mkdirs();
-        //File file = new File(dir,nombre+y+mm+d+h+m+".png");
+        //File file = new File(dir,_nombre+y+mm+d+h+m+".png");
         File file = new File(filepath.getAbsolutePath()+"/Robotino/"+nombre+hora+".jpg");
         name1= filepath.getAbsolutePath()+"/Robotino/"+nombre+hora+".jpg";
 

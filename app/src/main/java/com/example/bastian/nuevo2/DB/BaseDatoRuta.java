@@ -38,27 +38,27 @@ public class BaseDatoRuta extends SQLiteOpenHelper {
 
     private ContentValues generaValoresRuta(Ruta ruta){
         ContentValues valores = new ContentValues();
-        valores.put(TablaRuta.FIELD_ESCALA, ruta.escala);
-        valores.put(TablaRuta.FIELD_NOMBRE_RUTA,ruta.nombre);
+        valores.put(TablaRuta.FIELD_ESCALA, ruta._escala);
+        valores.put(TablaRuta.FIELD_NOMBRE_RUTA,ruta._nombre);
         return valores;
     }
 
     public void InsertarRuta(Ruta ruta){
         db.insert(TablaRuta.TABLE_NAME,null,generaValoresRuta(ruta));
         int ultimoID = getUltimoIdTablaRuta();
-        insertarPuntoRuta(ruta.getPuntos(),ultimoID);
+        insertarPuntoRuta(ruta.get_puntos(),ultimoID);
 
     }
 
 
     public void editarRuta(Ruta ruta){
         ContentValues valores = new ContentValues();
-        valores.put(TablaRuta.FIELD_NOMBRE_RUTA, ruta.getNombre());
-        valores.put(TablaRuta.FIELD_ESCALA, ruta.getEscala());
-        db.update(TablaRuta.TABLE_NAME, valores, TablaRuta.FIELD_ID+ "=" + ruta.getID(), null);
+        valores.put(TablaRuta.FIELD_NOMBRE_RUTA, ruta.get_nombre());
+        valores.put(TablaRuta.FIELD_ESCALA, ruta.get_escala());
+        db.update(TablaRuta.TABLE_NAME, valores, TablaRuta.FIELD_ID+ "=" + ruta.get_ID(), null);
 
-        eliminarPuntosRuta(ruta.getID());
-        insertarPuntoRuta(ruta.getPuntos(),ruta.getID());
+        eliminarPuntosRuta(ruta.get_ID());
+        insertarPuntoRuta(ruta.get_puntos(),ruta.get_ID());
     }
 
     private void insertarPuntoRuta(ArrayList<Point> puntos , int id){
@@ -95,10 +95,10 @@ public class BaseDatoRuta extends SQLiteOpenHelper {
         {
             do {
                 Ruta r = new Ruta();
-                r.setID(c.getInt(0));
-                r.setNombre(c.getString(1));
-                r.setEscala(c.getInt(2));
-                r.setPuntos(getPuntosRuta(r.getID()));
+                r.set_ID(c.getInt(0));
+                r.set_nombre(c.getString(1));
+                r.set_escala(c.getInt(2));
+                r.set_puntos(getPuntosRuta(r.get_ID()));
                 rutas.add(r);
 
             }while(c.moveToNext());
@@ -130,7 +130,7 @@ public class BaseDatoRuta extends SQLiteOpenHelper {
     }
 
     public Ruta cargarPuntosARuta(Ruta ruta){
-        ruta.setPuntos(getPuntosRuta(ruta.getID()));
+        ruta.set_puntos(getPuntosRuta(ruta.get_ID()));
         return ruta;
     }
 

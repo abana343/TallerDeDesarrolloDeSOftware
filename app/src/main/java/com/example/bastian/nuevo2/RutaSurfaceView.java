@@ -16,7 +16,7 @@ import android.view.SurfaceView;
  */
 public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     private MySurfaceThread thread;
-    RutaActivity2 rutaActivity;
+    RutaActivity rutaActivity;
     Ruta ruta;
     int ancho;
     int alto;
@@ -61,13 +61,13 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     private void dibujarRuta(Canvas canvas)
     {
-        int rutaPuntosSize = ruta.getPuntos().size();
+        int rutaPuntosSize = ruta.get_puntos().size();
         Paint paint = new Paint();
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(4);
         if(rutaPuntosSize != 0 && accionActual.equals("AgregarNodo") && touchX != -1){
-            canvas.drawLine(ruta.getPuntos().get(rutaPuntosSize-1).x,ruta.getPuntos().get(rutaPuntosSize-1).y,touchX,touchY,paint);
+            canvas.drawLine(ruta.get_puntos().get(rutaPuntosSize-1).x,ruta.get_puntos().get(rutaPuntosSize-1).y,touchX,touchY,paint);
 
         }
 
@@ -75,18 +75,18 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         if(rutaPuntosSize == 1 && accionActual.equals("AgregarNodo")){
 
             if ( seleccionNodoEliminar == 0){
-                dibujarPunto(ruta.getPuntos().get(0),1,canvas,true);
+                dibujarPunto(ruta.get_puntos().get(0),1,canvas,true);
             }
             else{
-                dibujarPunto(ruta.getPuntos().get(0),1,canvas,false);
+                dibujarPunto(ruta.get_puntos().get(0),1,canvas,false);
             }
 
         }
 
         for(int i = 0; i < rutaPuntosSize-1;i++){
             Point p1 , p2;
-            p1 = ruta.getPuntos().get(i);
-            p2 = ruta.getPuntos().get(i+1);
+            p1 = ruta.get_puntos().get(i);
+            p2 = ruta.get_puntos().get(i+1);
 
             canvas.drawLine(p1.x,p1.y,p2.x,p2.y,paint);
             if ( seleccionNodoEliminar == i){
@@ -115,13 +115,13 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public Point seleccionarPunto()
     {
         Point p = null;
-        for(int i = 0; i< ruta.getPuntos().size(); i++){
-            if (ruta.getPuntos().get(i).x -radioPunto < touchX &&
-               (ruta.getPuntos().get(i).x + radioPunto) > touchX &&
-                ruta.getPuntos().get(i).y -radioPunto < touchY &&
-               (ruta.getPuntos().get(i).y + radioPunto) > touchY )
+        for(int i = 0; i< ruta.get_puntos().size(); i++){
+            if (ruta.get_puntos().get(i).x -radioPunto < touchX &&
+               (ruta.get_puntos().get(i).x + radioPunto) > touchX &&
+                ruta.get_puntos().get(i).y -radioPunto < touchY &&
+               (ruta.get_puntos().get(i).y + radioPunto) > touchY )
             {
-                p = ruta.getPuntos().get(i);
+                p = ruta.get_puntos().get(i);
 
             }
         }
@@ -131,11 +131,11 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public int seleccionarPuntoPosicion()
     {
         int p = -1;
-        for(int i = 0; i< ruta.getPuntos().size(); i++){
-            if (ruta.getPuntos().get(i).x -radioPunto < touchX &&
-                    (ruta.getPuntos().get(i).x + radioPunto) > touchX &&
-                    ruta.getPuntos().get(i).y -radioPunto < touchY &&
-                    (ruta.getPuntos().get(i).y + radioPunto) > touchY )
+        for(int i = 0; i< ruta.get_puntos().size(); i++){
+            if (ruta.get_puntos().get(i).x -radioPunto < touchX &&
+                    (ruta.get_puntos().get(i).x + radioPunto) > touchX &&
+                    ruta.get_puntos().get(i).y -radioPunto < touchY &&
+                    (ruta.get_puntos().get(i).y + radioPunto) > touchY )
             {
                 p = i;
 
@@ -199,7 +199,7 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         }
     }
 
-    public void setRutaActivity(RutaActivity2 ruta)
+    public void setRutaActivity(RutaActivity ruta)
     {
         try {
             this.rutaActivity = ruta;
@@ -285,7 +285,7 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
 
-                        if(ruta.getPuntos().size()==0)
+                        if(ruta.get_puntos().size()==0)
                         {
 
                             ruta.agregarPunto(touchX,touchY);
@@ -305,7 +305,7 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
 
 
-                        if(ruta.getPuntos().size()==0)
+                        if(ruta.get_puntos().size()==0)
                         {
                             ruta.agregarPunto(touchX,touchY);
                         }
@@ -346,7 +346,7 @@ public class RutaSurfaceView extends SurfaceView implements SurfaceHolder.Callba
                         if (seleccionNodoEliminar == seleccionarPuntoPosicion())
                         {
                             ruta.eliminarPunto(seleccionNodoEliminar);
-                            if(ruta.getPuntos().size() == 1)
+                            if(ruta.get_puntos().size() == 1)
                                 ruta.eliminarPunto(0);
                             seleccionNodoEliminar =-1;
                         }
